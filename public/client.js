@@ -37,6 +37,12 @@ if (btnReadMore) {
     });
 }
 
+// --- Helper Function: Find URL'er (Regex) ---
+function extractUrls(text) {
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    return text.match(urlPattern) || [];
+}
+
 // --- Form Handling ---
 
 const commentForm = document.getElementById('comment-form');
@@ -51,19 +57,32 @@ if (commentForm) {
         const author = document.getElementById('comment-author').value;
         const text = document.getElementById('comment-text').value;
 
+        //3. Use out Helper Function to extract URLs from the text
+        const foundUrls = extractUrls(text);
+
         console.log("Form submitted by:", author);
         console.log("Comment text:", text);
+        console.log("Fundne URL'er:", foundUrls);
 
-        // 3. Clear previous feedback
+        // 4. Clear previous feedback
         feedbackMessage.textContent = "Arbejder...";
         feedbackMessage.style.color = "blue";
 
-       // 4. URL validation (placeholder for now)
-        setTimeout(() => {
-             feedbackMessage.textContent = "Tak for din kommentar! (URL validering kommer snart)";
-             feedbackMessage.style.color = "green";
-             // Clear the form
-             commentForm.reset();
-        }, 1000);
+       // 5. URL validation (placeholder for now)
+        if (foundUrls.length > 0) {
+            // SCENARIO 1: There are URLs in the comment
+            feedbackMessage.textContent = `⚠️ Hov! Jeg fandt ${foundUrls.length} link(s). De skal lige sikkerhedstjekkes hos serveren...`;
+            feedbackMessage.style.color = "orange";
+            
+            // Calling the server (placeholder for now)
+        } else {
+            // SCENARIO 2: No URLs found, just a regular comment
+            setTimeout(() => {
+                feedbackMessage.textContent = "Tak for din kommentar! Den er nu synlig for alle.";
+                feedbackMessage.style.color = "green";
+                // Clear the form
+                commentForm.reset();
+            }, 1000);
+        }
     });
 }
