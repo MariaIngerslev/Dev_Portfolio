@@ -4,10 +4,21 @@
 const viewHome = document.getElementById('view-home');
 const viewPost = document.getElementById('view-post');
 
-// Buttons 
+// Buttons
 const btnHome = document.getElementById('btn-home');
 const btnBack = document.getElementById('back-btn');
 const btnReadMore = document.querySelector('.read-more-btn');
+
+// --- Feedback Helper ---
+const FEEDBACK_CLASSES = ['feedback-loading', 'feedback-success', 'feedback-warning', 'feedback-error'];
+
+function setFeedback(message, state) {
+    feedbackMessage.textContent = message;
+    feedbackMessage.classList.remove(...FEEDBACK_CLASSES);
+    if (state) {
+        feedbackMessage.classList.add(`feedback-${state}`);
+    }
+}
 
 
 // --- Navigation Functions ---
@@ -63,14 +74,12 @@ if (commentForm) {
         console.log("Sender forespørgsel for:", author);
 
         // 4. Provide feedback to the user (UX)
-        feedbackMessage.textContent = "Analyserer din kommentar hos serveren...";
-        feedbackMessage.style.color = "blue";
+        setFeedback("Analyserer din kommentar hos serveren...", "loading");
 
        // 5. URL validation (placeholder for now)
         if (foundUrls.length > 0) {
             // SCENARIO 1: There are URLs in the comment
-            feedbackMessage.textContent = `⚠️ Hov! Jeg fandt ${foundUrls.length} link(s). De skal lige sikkerhedstjekkes hos serveren...`;
-            feedbackMessage.style.color = "orange";
+            setFeedback(`⚠️ Hov! Jeg fandt ${foundUrls.length} link(s). De skal lige sikkerhedstjekkes hos serveren...`, "warning");
 
             try {
                 const response = await fetch('/api/validate-urls', {
@@ -86,27 +95,22 @@ if (commentForm) {
                 const data = await response.json();
 
                 if (data.allSafe) {
-                    feedbackMessage.textContent = "Alle links er sikre! Din kommentar er publiceret.";
-                    feedbackMessage.style.color = "green";
+                    setFeedback("✓ Alle links er sikre! Din kommentar er publiceret.", "success");
                     commentForm.reset();
                 } else {
                     const unsafeUrls = data.results
                         .filter((r) => !r.safe)
                         .map((r) => r.url);
-                    feedbackMessage.textContent = `Advarsel! ${unsafeUrls.length} link(s) blev markeret som usikre: ${unsafeUrls.join(', ')}`;
-                    feedbackMessage.style.color = "red";
+                    setFeedback(`Advarsel! ${unsafeUrls.length} link(s) blev markeret som usikre: ${unsafeUrls.join(', ')}`, "error");
                 }
             } catch (error) {
-                feedbackMessage.textContent = "Fejl: Kunne ikke kontakte serveren. Prøv igen senere.";
-                feedbackMessage.style.color = "red";
+                setFeedback("Fejl: Kunne ikke kontakte serveren. Prøv igen senere.", "error");
                 console.error("Validation fetch error:", error);
             }
         } else {
             // SCENARIO 2: No URLs found, just a regular comment
             setTimeout(() => {
-                feedbackMessage.textContent = "Tak for din kommentar! Den er nu synlig for alle.";
-                feedbackMessage.style.color = "green";
-                // Clear the form
+                setFeedback("✓ Tak for din kommentar! Den er nu synlig for alle.", "success");
                 commentForm.reset();
             }, 1000);
         }
