@@ -62,11 +62,17 @@ const feedbackMessage = document.getElementById('feedback-message');
 // --- Comment Rendering ---
 const commentsList = document.getElementById('comments-list');
 
+function escapeHtml(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+}
+
 function renderComment(comment) {
     const div = document.createElement('div');
     div.className = 'comment-card';
     const date = new Date(comment.date).toLocaleString('da-DK');
-    div.innerHTML = `<div class="comment-header"><strong>${comment.author}</strong><time>${date}</time></div><p>${comment.text}</p>`;
+    div.innerHTML = `<div class="comment-header"><strong>${escapeHtml(comment.author)}</strong><time>${date}</time></div><p>${escapeHtml(comment.text)}</p>`;
     return div;
 }
 
