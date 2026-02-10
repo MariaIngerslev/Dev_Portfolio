@@ -1,24 +1,25 @@
 // --- SPA Router ---
 
+// Pre-compile route patterns once at load time instead of on every navigation
 const routes = [
     { path: '/', render: renderHome },
     { path: '/posts/:id', render: renderPost },
-];
+].map(({ path, render }) => {
+    const paramNames = [];
+    const pattern = path.replace(/:([^/]+)/g, (_, name) => {
+        paramNames.push(name);
+        return '([^/]+)';
+    });
+    return { regex: new RegExp(`^${pattern}$`), paramNames, render };
+});
 
 function matchRoute(pathname) {
-    for (const route of routes) {
-        const paramNames = [];
-        const pattern = route.path.replace(/:([^/]+)/g, (_, name) => {
-            paramNames.push(name);
-            return '([^/]+)';
-        });
-        const match = new RegExp(`^${pattern}$`).exec(pathname);
+    for (const { regex, paramNames, render } of routes) {
+        const match = regex.exec(pathname);
         if (match) {
             const params = {};
-            paramNames.forEach((name, i) => {
-                params[name] = match[i + 1];
-            });
-            return { render: route.render, params };
+            paramNames.forEach((name, i) => { params[name] = match[i + 1]; });
+            return { render, params };
         }
     }
     return null;
@@ -36,25 +37,22 @@ function navigateTo(url, pushState = true) {
     }
 }
 
-// Intercept clicks on internal <a> tags
 document.addEventListener('click', (e) => {
     const anchor = e.target.closest('a[href]');
     if (!anchor) return;
 
     const href = anchor.getAttribute('href');
-    // Only intercept internal links (starting with /)
     if (href && href.startsWith('/') && !href.startsWith('/api')) {
         e.preventDefault();
         navigateTo(href);
     }
 });
 
-// Handle back/forward buttons
 window.addEventListener('popstate', () => {
     navigateTo(window.location.pathname, false);
 });
 
-// --- DOM Elements ---
+// --- DOM References ---
 
 const viewHome = document.getElementById('view-home');
 const viewPost = document.getElementById('view-post');
@@ -64,10 +62,28 @@ const commentsList = document.getElementById('comments-list');
 const commentForm = document.getElementById('comment-form');
 const feedbackMessage = document.getElementById('feedback-message');
 
-// Track current post ID for comment submission
 let currentPostId = null;
 
-// --- Feedback Helper ---
+// --- Shared Helpers ---
+
+const DATE_OPTIONS = { year: 'numeric', month: 'long', day: 'numeric' };
+
+const formatDate = (isoString) =>
+    new Date(isoString).toLocaleDateString('da-DK', DATE_OPTIONS);
+
+const URL_PATTERN = /(https?:\/\/[^\s]+)/g;
+
+const extractUrls = (text) => text.match(URL_PATTERN) || [];
+
+const el = (tag, className, textContent) => {
+    const element = document.createElement(tag);
+    if (className) element.className = className;
+    if (textContent) element.textContent = textContent;
+    return element;
+};
+
+// --- Feedback ---
+
 const FEEDBACK_CLASSES = ['feedback-loading', 'feedback-success', 'feedback-warning', 'feedback-error'];
 
 function setFeedback(message, state) {
@@ -87,6 +103,31 @@ function showView(name) {
 
 // --- Render Functions ---
 
+function extractExcerpt(html) {
+    const match = html.match(/<p>(.*?)<\/p>/);
+    return match ? match[1].replace(/<[^>]*>/g, '').slice(0, 120) + '...' : '';
+}
+
+function createBlogCard(post) {
+    const article = el('article', 'blog-card');
+
+    const cardBody = el('div', 'card-body');
+    cardBody.append(
+        el('span', 'card-tag', 'Ny'),
+        el('h2', 'card-title', post.title),
+        el('time', 'card-date', formatDate(post.createdAt)),
+        el('p', 'card-excerpt', extractExcerpt(post.content))
+    );
+
+    const cardFooter = el('div', 'card-footer');
+    const link = el('a', 'read-more-btn', 'Læs mere →');
+    link.href = `/posts/${post._id}`;
+    cardFooter.appendChild(link);
+
+    article.append(cardBody, cardFooter);
+    return article;
+}
+
 async function renderHome() {
     showView('home');
     currentPostId = null;
@@ -96,55 +137,13 @@ async function renderHome() {
         if (!response.ok) return;
 
         const posts = await response.json();
+
+        // Build all cards in a fragment to trigger a single DOM reflow
+        const fragment = document.createDocumentFragment();
+        posts.forEach((post) => fragment.appendChild(createBlogCard(post)));
+
         blogList.textContent = '';
-
-        posts.forEach((post) => {
-            const date = new Date(post.createdAt).toLocaleDateString('da-DK', {
-                year: 'numeric', month: 'long', day: 'numeric'
-            });
-
-            // Extract first <p> text as excerpt
-            const excerptMatch = post.content.match(/<p>(.*?)<\/p>/);
-            const excerpt = excerptMatch
-                ? excerptMatch[1].replace(/<[^>]*>/g, '').slice(0, 120) + '...'
-                : '';
-
-            const article = document.createElement('article');
-            article.className = 'blog-card';
-
-            const cardBody = document.createElement('div');
-            cardBody.className = 'card-body';
-
-            const tag = document.createElement('span');
-            tag.className = 'card-tag';
-            tag.textContent = 'Ny';
-
-            const cardTitle = document.createElement('h2');
-            cardTitle.className = 'card-title';
-            cardTitle.textContent = post.title;
-
-            const cardDate = document.createElement('time');
-            cardDate.className = 'card-date';
-            cardDate.textContent = date;
-
-            const cardExcerpt = document.createElement('p');
-            cardExcerpt.className = 'card-excerpt';
-            cardExcerpt.textContent = excerpt;
-
-            cardBody.append(tag, cardTitle, cardDate, cardExcerpt);
-
-            const cardFooter = document.createElement('div');
-            cardFooter.className = 'card-footer';
-
-            const link = document.createElement('a');
-            link.href = `/posts/${post._id}`;
-            link.className = 'read-more-btn';
-            link.textContent = 'Læs mere \u2192';
-
-            cardFooter.appendChild(link);
-            article.append(cardBody, cardFooter);
-            blogList.appendChild(article);
-        });
+        blogList.appendChild(fragment);
     } catch (err) {
         console.error('Error loading posts:', err);
     }
@@ -162,31 +161,22 @@ async function renderPost(params) {
         }
 
         const post = await response.json();
-        const date = new Date(post.createdAt).toLocaleDateString('da-DK', {
-            year: 'numeric', month: 'long', day: 'numeric'
-        });
-
         fullPostContent.textContent = '';
 
-        const postTitle = document.createElement('h2');
-        postTitle.textContent = post.title;
-
-        const postDate = document.createElement('time');
-        postDate.className = 'post-date';
-        postDate.textContent = date;
-
-        const postBody = document.createElement('div');
+        const postBody = el('div');
         postBody.innerHTML = post.content;
 
-        fullPostContent.append(postTitle, postDate, postBody);
+        fullPostContent.append(
+            el('h2', null, post.title),
+            el('time', 'post-date', formatDate(post.createdAt)),
+            postBody
+        );
 
-        // Load existing comments
         await loadComments(params.id);
     } catch (err) {
         console.error('Error loading post:', err);
     }
 
-    // Reset feedback when entering post view
     setFeedback('', null);
 }
 
@@ -199,41 +189,23 @@ async function loadComments(postId) {
         if (!response.ok) return;
 
         const comments = await response.json();
-        comments.forEach((comment) => {
-            commentsList.appendChild(renderCommentEl(comment));
-        });
+        const fragment = document.createDocumentFragment();
+        comments.forEach((comment) => fragment.appendChild(renderCommentEl(comment)));
+        commentsList.appendChild(fragment);
     } catch (err) {
         console.error('Error loading comments:', err);
     }
 }
 
 function renderCommentEl(comment) {
-    const div = document.createElement('div');
-    div.className = 'comment-card';
-
-    const header = document.createElement('div');
-    header.className = 'comment-header';
-
-    const strong = document.createElement('strong');
-    strong.textContent = comment.author || 'Anonym';
-
-    const time = document.createElement('time');
-    time.textContent = new Date(comment.createdAt).toLocaleString('da-DK');
-
-    header.append(strong, time);
-
-    const p = document.createElement('p');
-    p.textContent = comment.content;
-
-    div.append(header, p);
+    const div = el('div', 'comment-card');
+    const header = el('div', 'comment-header');
+    header.append(
+        el('strong', null, comment.author || 'Anonym'),
+        el('time', null, new Date(comment.createdAt).toLocaleString('da-DK'))
+    );
+    div.append(header, el('p', null, comment.content));
     return div;
-}
-
-// --- URL Extraction ---
-
-function extractUrls(text) {
-    const urlPattern = /(https?:\/\/[^\s]+)/g;
-    return text.match(urlPattern) || [];
 }
 
 // --- Comment Form Handling ---
@@ -252,7 +224,6 @@ if (commentForm) {
         const email = document.getElementById('comment-email').value;
         const subscribe = document.getElementById('comment-subscribe').checked;
 
-        // Check URLs before submitting
         const urls = extractUrls(text);
         if (urls.length > 0) {
             setFeedback('Tjekker URL-sikkerhed...', 'loading');
@@ -262,8 +233,8 @@ if (commentForm) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ urls })
                 });
-                const checkData = await checkResponse.json();
-                const unsafeUrls = checkData.filter((r) => !r.safe);
+                const { results } = await checkResponse.json();
+                const unsafeUrls = results.filter((r) => !r.safe);
                 if (unsafeUrls.length > 0) {
                     const names = unsafeUrls.map((r) => r.url).join(', ');
                     setFeedback(`Usikre links fundet: ${names}`, 'error');
@@ -282,13 +253,7 @@ if (commentForm) {
             const response = await fetch('/api/comments', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    postId: currentPostId,
-                    author,
-                    text,
-                    email,
-                    subscribe
-                })
+                body: JSON.stringify({ postId: currentPostId, author, text, email, subscribe })
             });
 
             const data = await response.json();

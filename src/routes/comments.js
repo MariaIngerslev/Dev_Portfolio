@@ -1,37 +1,25 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const { validateUrls } = require('../urlvalidator');
+const extractUrls = require('../utils/extractUrls');
 const Post = require('../models/Post');
 const Comment = require('../models/Comment');
+const validateObjectId = require('../middleware/validateObjectId');
 
 const router = express.Router();
 
-// Extract URLs from text
-function extractUrls(text) {
-    const urlPattern = /(https?:\/\/[^\s]+)/g;
-    return text.match(urlPattern) || [];
-}
-
-// GET /api/comments/:postId - Return comments for a specific post
-router.get('/:postId', async (req, res) => {
+router.get('/:postId', validateObjectId('postId'), async (req, res) => {
     try {
-        const { postId } = req.params;
-
-        if (!mongoose.Types.ObjectId.isValid(postId)) {
-            return res.status(400).json({ error: 'Invalid post ID.' });
-        }
-
-        const comments = await Comment.find({ postId }).sort({ createdAt: -1 });
+        const comments = await Comment.find({ postId: req.params.postId }).sort({ createdAt: -1 });
         res.json(comments);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch comments.' });
     }
 });
 
-// POST /api/comments - Add a comment
 router.post('/', async (req, res) => {
     try {
-        const { postId, author, text } = req.body;
+        const { postId, text } = req.body;
 
         if (!postId || !text) {
             return res.status(400).json({
@@ -43,7 +31,6 @@ router.post('/', async (req, res) => {
             return res.status(400).json({ error: 'Invalid post ID.' });
         }
 
-        // Validate that the post exists
         const post = await Post.findById(postId);
         if (!post) {
             return res.status(404).json({
@@ -51,16 +38,14 @@ router.post('/', async (req, res) => {
             });
         }
 
-        // Check URLs in the comment text
         const foundUrls = extractUrls(text);
         if (foundUrls.length > 0) {
             const results = validateUrls(foundUrls);
-            const allSafe = results.every((r) => r.safe);
-            if (!allSafe) {
-                const unsafeUrls = results.filter((r) => !r.safe).map((r) => r.url);
+            const unsafeUrls = results.filter((r) => !r.safe);
+            if (unsafeUrls.length > 0) {
                 return res.status(400).json({
-                    error: `Comment contains unsafe links: ${unsafeUrls.join(', ')}`,
-                    unsafeUrls
+                    error: `Comment contains unsafe links: ${unsafeUrls.map((r) => r.url).join(', ')}`,
+                    unsafeUrls: unsafeUrls.map((r) => r.url)
                 });
             }
         }

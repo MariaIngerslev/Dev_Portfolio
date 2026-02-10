@@ -1,10 +1,9 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const Post = require('../models/Post');
+const validateObjectId = require('../middleware/validateObjectId');
 
 const router = express.Router();
 
-// GET /api/posts - Return all posts
 router.get('/', async (req, res) => {
     try {
         const posts = await Post.find().sort({ createdAt: -1 });
@@ -14,8 +13,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET /api/posts/latest - Return the most recent post
-// Must be defined before /:id to avoid being caught by the param route
+// Defined before /:id to avoid being caught by the param route
 router.get('/latest', async (req, res) => {
     try {
         const post = await Post.findOne().sort({ createdAt: -1 });
@@ -28,16 +26,9 @@ router.get('/latest', async (req, res) => {
     }
 });
 
-// GET /api/posts/:id - Return a single post by ID
-router.get('/:id', async (req, res) => {
+router.get('/:id', validateObjectId('id'), async (req, res) => {
     try {
-        const { id } = req.params;
-
-        if (!mongoose.Types.ObjectId.isValid(id)) {
-            return res.status(400).json({ error: 'Invalid post ID.' });
-        }
-
-        const post = await Post.findById(id);
+        const post = await Post.findById(req.params.id);
         if (!post) {
             return res.status(404).json({ error: 'Post not found.' });
         }
@@ -47,7 +38,6 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST /api/posts - Create a new post
 router.post('/', async (req, res) => {
     try {
         const { title, content } = req.body;
