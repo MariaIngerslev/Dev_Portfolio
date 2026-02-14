@@ -37,7 +37,7 @@ This is a Danish-language blog app with comment URL validation, built as an Expr
 
 **Separation of Concerns in `client.js`:** Although all client code resides in a single file, maintain a strict logical separation between **Data Access** (all `fetch` calls and response handling) and **DOM Manipulation** (element creation, rendering, event binding). Keep data-fetching functions pure of DOM side-effects, and keep rendering functions free of network calls. This makes the code easier to reason about, test, and refactor.
 
-**`src/urlvalidator.js`**: Mock URL validator with a Set-based domain blacklist (O(1) lookup) and random safe/unsafe simulation (`UNSAFE_THRESHOLD = 0.3`) for non-blacklisted URLs. Internal `classifyUrl` helper per URL; exports `validateUrls(urls)` returning `[{ url, safe, reason }]`. Hostname matching is case-insensitive.
+**`src/urlvalidator.js`**: Deterministic URL validator with a Set-based domain blacklist and keyword-based detection. Blacklist terms are matched against the entire URL string (not just hostname), catching threats in paths like `example.com/virus.exe`. URLs containing "unsafe" or "risky" keywords are flagged as malicious. Internal `classifyUrl` helper per URL; exports `validateUrls(urls)` returning `[{ url, safe, reason }]` where reason is `'blacklisted'`, `'malicious'`, `'safe'`, or `'malformed'`. All matching is case-insensitive.
 
 ## Express 5 Best Practices
 

@@ -1,10 +1,6 @@
 const { validateUrls } = require('./urlvalidator');
 
 describe('validateUrls', () => {
-    afterEach(() => {
-        jest.restoreAllMocks();
-    });
-
     describe('blacklisted URLs', () => {
         test('malware.example.com is blocked', () => {
             const [result] = validateUrls(['https://malware.example.com/path']);
@@ -24,8 +20,20 @@ describe('validateUrls', () => {
             expect(result.reason).toBe('blacklisted');
         });
 
-        test('virus.exe is blocked', () => {
+        test('virus.exe is blocked as hostname', () => {
             const [result] = validateUrls(['http://virus.exe/malware']);
+            expect(result.safe).toBe(false);
+            expect(result.reason).toBe('blacklisted');
+        });
+
+        test('virus.exe is blocked in URL path', () => {
+            const [result] = validateUrls(['https://example.com/downloads/virus.exe']);
+            expect(result.safe).toBe(false);
+            expect(result.reason).toBe('blacklisted');
+        });
+
+        test('www.google.com is blocked', () => {
+            const [result] = validateUrls(['https://www.google.com/search']);
             expect(result.safe).toBe(false);
             expect(result.reason).toBe('blacklisted');
         });
@@ -36,42 +44,44 @@ describe('validateUrls', () => {
             expect(result.reason).toBe('blacklisted');
         });
 
-        test('blacklist matches hostname only, not path', () => {
-            // safe.com is not blacklisted even if path contains a blacklisted name
-            jest.spyOn(Math, 'random').mockReturnValue(0.99);
+        test('blacklist matches terms anywhere in the URL', () => {
             const [result] = validateUrls(['https://safe.com/malware.example.com']);
-            expect(result.safe).toBe(true);
-            expect(result.reason).toBe('simulated_check');
+            expect(result.safe).toBe(false);
+            expect(result.reason).toBe('blacklisted');
         });
     });
 
-    describe('simulated check with Math.random mocking', () => {
-        test('returns safe when random value exceeds threshold (0.3)', () => {
-            jest.spyOn(Math, 'random').mockReturnValue(0.5);
-            const [result] = validateUrls(['https://unknown-site.com']);
-            expect(result.safe).toBe(true);
-            expect(result.reason).toBe('simulated_check');
-        });
-
-        test('returns unsafe when random value is at the threshold (0.3)', () => {
-            jest.spyOn(Math, 'random').mockReturnValue(0.3);
-            const [result] = validateUrls(['https://unknown-site.com']);
+    describe('keyword-based detection', () => {
+        test('URL containing "unsafe" is flagged as malicious', () => {
+            const [result] = validateUrls(['https://example.com/unsafe-page']);
             expect(result.safe).toBe(false);
-            expect(result.reason).toBe('simulated_check');
+            expect(result.reason).toBe('malicious');
         });
 
-        test('returns unsafe when random value is below threshold', () => {
-            jest.spyOn(Math, 'random').mockReturnValue(0.1);
-            const [result] = validateUrls(['https://another-site.org']);
+        test('URL containing "risky" is flagged as malicious', () => {
+            const [result] = validateUrls(['https://example.com/risky-download']);
             expect(result.safe).toBe(false);
-            expect(result.reason).toBe('simulated_check');
+            expect(result.reason).toBe('malicious');
         });
 
-        test('returns safe when random value is just above threshold', () => {
-            jest.spyOn(Math, 'random').mockReturnValue(0.31);
-            const [result] = validateUrls(['https://borderline.net']);
+        test('keyword detection is case-insensitive', () => {
+            const [result] = validateUrls(['https://example.com/UNSAFE']);
+            expect(result.safe).toBe(false);
+            expect(result.reason).toBe('malicious');
+        });
+    });
+
+    describe('safe URLs', () => {
+        test('non-blacklisted URL without keywords is safe', () => {
+            const [result] = validateUrls(['https://safe-site.com']);
             expect(result.safe).toBe(true);
-            expect(result.reason).toBe('simulated_check');
+            expect(result.reason).toBe('safe');
+        });
+
+        test('another clean URL is safe', () => {
+            const [result] = validateUrls(['https://example.org/page']);
+            expect(result.safe).toBe(true);
+            expect(result.reason).toBe('safe');
         });
     });
 
@@ -97,7 +107,6 @@ describe('validateUrls', () => {
 
     describe('multiple URLs', () => {
         test('validates multiple URLs in a single call', () => {
-            jest.spyOn(Math, 'random').mockReturnValue(0.99);
             const results = validateUrls([
                 'https://safe-site.com',
                 'https://malware.example.com',
@@ -105,7 +114,7 @@ describe('validateUrls', () => {
             ]);
 
             expect(results).toHaveLength(3);
-            expect(results[0]).toEqual({ url: 'https://safe-site.com', safe: true, reason: 'simulated_check' });
+            expect(results[0]).toEqual({ url: 'https://safe-site.com', safe: true, reason: 'safe' });
             expect(results[1]).toEqual({ url: 'https://malware.example.com', safe: false, reason: 'blacklisted' });
             expect(results[2]).toEqual({ url: 'not-a-url', safe: false, reason: 'malformed' });
         });
@@ -118,11 +127,10 @@ describe('validateUrls', () => {
 
     describe('result structure', () => {
         test('each result contains url, safe, and reason fields', () => {
-            jest.spyOn(Math, 'random').mockReturnValue(0.99);
             const [result] = validateUrls(['https://example.com']);
             expect(result).toHaveProperty('url', 'https://example.com');
             expect(result).toHaveProperty('safe', true);
-            expect(result).toHaveProperty('reason', 'simulated_check');
+            expect(result).toHaveProperty('reason', 'safe');
         });
 
         test('preserves the original URL string in the result', () => {

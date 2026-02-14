@@ -7,31 +7,51 @@ const BLACKLIST = new Set([
     'evil.example.net',
     'bad-reputation.com',
     'virus.exe',
+    'www.google.com',
 ]);
 
-const UNSAFE_THRESHOLD = 0.3;
+const MALICIOUS_KEYWORDS = ['unsafe', 'risky'];
 
-const getHostname = (urlString) => {
+const parseUrl = (urlString) => {
     try {
-        return new URL(urlString).hostname.toLowerCase();
+        return new URL(urlString);
     } catch {
         return null;
     }
 };
 
-const classifyUrl = (url) => {
-    const hostname = getHostname(url);
+const isBlacklisted = (urlString, parsedUrl) => {
+    const lowercasedUrl = urlString.toLowerCase();
+    for (const term of BLACKLIST) {
+        if (lowercasedUrl.includes(term)) {
+            return true;
+        }
+    }
+    const hostname = parsedUrl.hostname.toLowerCase();
+    return BLACKLIST.has(hostname);
+};
 
-    if (!hostname) {
+const containsMaliciousKeyword = (urlString) => {
+    const lowercasedUrl = urlString.toLowerCase();
+    return MALICIOUS_KEYWORDS.some((keyword) => lowercasedUrl.includes(keyword));
+};
+
+const classifyUrl = (url) => {
+    const parsedUrl = parseUrl(url);
+
+    if (!parsedUrl) {
         return { url, safe: false, reason: 'malformed' };
     }
 
-    if (BLACKLIST.has(hostname)) {
+    if (isBlacklisted(url, parsedUrl)) {
         return { url, safe: false, reason: 'blacklisted' };
     }
 
-    const isSafe = Math.random() > UNSAFE_THRESHOLD;
-    return { url, safe: isSafe, reason: 'simulated_check' };
+    if (containsMaliciousKeyword(url)) {
+        return { url, safe: false, reason: 'malicious' };
+    }
+
+    return { url, safe: true, reason: 'safe' };
 };
 
 const validateUrls = (urls) => urls.map(classifyUrl);
