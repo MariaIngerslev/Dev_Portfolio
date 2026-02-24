@@ -16,9 +16,9 @@ router.get('/:postId', validateObjectId('postId'), async (req, res) => {
 router.post('/', async (req, res) => {
     const { postId, name, text } = req.body;
 
-    if (!postId || !text) {
+    if (typeof postId !== 'string' || typeof text !== 'string' || text.trim() === '') {
         return res.status(400).json({
-            error: "'postId' and 'text' are required."
+            error: "'postId' and 'text' are required and must be non-empty strings."
         });
     }
 
@@ -45,7 +45,8 @@ router.post('/', async (req, res) => {
         }
     }
 
-    const comment = await Comment.create({ name, content: text, postId });
+    const sanitizedName = (typeof name === 'string' && name.trim() !== '') ? name : undefined;
+    const comment = await Comment.create({ name: sanitizedName, content: text, postId });
     res.status(201).json(comment);
 });
 
