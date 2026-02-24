@@ -125,6 +125,38 @@ describe('validateUrls', () => {
         });
     });
 
+    describe('type safety', () => {
+        test('returns empty array for null input', () => {
+            expect(validateUrls(null)).toEqual([]);
+        });
+
+        test('returns empty array for undefined input', () => {
+            expect(validateUrls(undefined)).toEqual([]);
+        });
+
+        test('handles non-string values in the array without throwing', () => {
+            expect(() => validateUrls(['https://safe.com', null])).not.toThrow();
+            const results = validateUrls(['https://safe.com', null]);
+            expect(results).toHaveLength(2);
+            expect(results[0]).toMatchObject({ safe: true, reason: 'safe' });
+            expect(results[1]).toMatchObject({ safe: false, reason: 'malformed' });
+        });
+    });
+
+    describe('internationalized domain names', () => {
+        test('does not throw on IDN URLs and returns results with correct structure', () => {
+            const idnUrls = ['http://københavn.dk', 'https://æøå.com'];
+            expect(() => validateUrls(idnUrls)).not.toThrow();
+            const results = validateUrls(idnUrls);
+            expect(results).toHaveLength(2);
+            results.forEach((result) => {
+                expect(result).toHaveProperty('url');
+                expect(result).toHaveProperty('safe');
+                expect(result).toHaveProperty('reason');
+            });
+        });
+    });
+
     describe('result structure', () => {
         test('each result contains url, safe, and reason fields', () => {
             const [result] = validateUrls(['https://example.com']);

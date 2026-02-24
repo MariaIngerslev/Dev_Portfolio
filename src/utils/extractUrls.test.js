@@ -36,9 +36,10 @@ describe('extractUrls', () => {
 
     test('extracts URLs from mixed text and HTML content', () => {
         const text = '<a href="https://blog.example.com/post">Read more</a> or visit http://other.com';
-        const urls = extractUrls(text);
-        expect(urls).toContain('https://blog.example.com/post">Read');
-        expect(urls).toContain('http://other.com');
+        expect(extractUrls(text)).toEqual([
+            'https://blog.example.com/post',
+            'http://other.com',
+        ]);
     });
 
     test('ignores text that looks like a URL but has no protocol', () => {
@@ -52,5 +53,47 @@ describe('extractUrls', () => {
             'https://start.com',
             'https://end.com',
         ]);
+    });
+
+    describe('boundary punctuation', () => {
+        test('strips trailing period from a URL ending a sentence', () => {
+            const text = 'Check http://example.com.';
+            expect(extractUrls(text)).toEqual(['http://example.com']);
+        });
+
+        test('strips surrounding parentheses from a URL', () => {
+            const text = '(http://example.com/page)';
+            expect(extractUrls(text)).toEqual(['http://example.com/page']);
+        });
+
+        test('strips trailing comma after a URL', () => {
+            const text = 'See http://example.com/page, and also http://other.com';
+            expect(extractUrls(text)).toEqual([
+                'http://example.com/page',
+                'http://other.com',
+            ]);
+        });
+    });
+
+    describe('type safety', () => {
+        test('returns empty array for null input', () => {
+            expect(extractUrls(null)).toEqual([]);
+        });
+
+        test('returns empty array for undefined input', () => {
+            expect(extractUrls(undefined)).toEqual([]);
+        });
+
+        test('returns empty array for numeric input', () => {
+            expect(extractUrls(42)).toEqual([]);
+        });
+    });
+
+    describe('internationalized domain names', () => {
+        test('does not throw on IDN URLs and returns an array', () => {
+            const text = 'Visit http://københavn.dk or https://æøå.com for info';
+            expect(() => extractUrls(text)).not.toThrow();
+            expect(Array.isArray(extractUrls(text))).toBe(true);
+        });
     });
 });

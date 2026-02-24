@@ -54,6 +54,9 @@ const classifyUrl = (url) => {
     return { url, safe: true, reason: 'safe' };
 };
 
-const validateUrls = (urls) => urls.map(classifyUrl);
+const validateUrls = (urls) => {
+    if (!Array.isArray(urls)) return [];
+    return urls.map(classifyUrl);
+};
 
 module.exports = { validateUrls };
