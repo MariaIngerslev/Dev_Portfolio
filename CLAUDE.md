@@ -20,7 +20,7 @@ This is a Danish-language blog app with comment URL validation, built as an Expr
 - `Comment.js` — Schema: `name` (String, default: 'Anonym'), `content` (String, required), `postId` (ObjectId, ref: 'Post', required, indexed), `createdAt` (Date, default now).
 
 **Shared utilities and middleware** (`src/utils/`, `src/middleware/`, `src/data/`):
-- `utils/extractUrls.js` — Shared URL extraction via regex, used by both routes and client.
+- `utils/extractUrls.js` — Shared URL extraction via a strict, non-greedy regex that avoids capturing HTML attributes and terminal punctuation. Used by both server-side routes and the client. **The URL regex in `public/client.js` MUST be kept perfectly synchronised with `src/utils/extractUrls.js` at all times** — any divergence will cause validation mismatches between the frontend and backend.
 - `middleware/validateObjectId.js` — Reusable Express middleware for MongoDB ObjectId param validation.
 - `data/seed.js` — Initial blog post seed content, separated from entry point.
 
@@ -37,6 +37,11 @@ This is a Danish-language blog app with comment URL validation, built as an Expr
 
 **Separation of Concerns in `client.js`:** Although all client code resides in a single file, maintain a strict logical separation between **Data Access** (all `fetch` calls and response handling) and **DOM Manipulation** (element creation, rendering, event binding). Keep data-fetching functions pure of DOM side-effects, and keep rendering functions free of network calls. This makes the code easier to reason about, test, and refactor.
 
+**Frontend Standards for `client.js`:**
+- **Input trimming:** Always call `.trim()` on user input values before using or submitting them.
+- **Optional fields:** Pass empty optional fields (e.g. `name`) as `undefined` or omit them from the payload entirely — never as empty strings. This ensures Mongoose schema defaults (e.g. `'Anonym'`) are triggered correctly.
+- **Fetch error handling:** Always check `!response.ok` explicitly after every `fetch` call before attempting to parse the JSON body. Never assume a response is successful based solely on the absence of a network error.
+
 **`src/urlvalidator.js`**: Deterministic URL validator with a Set-based domain blacklist and keyword-based detection. Blacklist terms are matched against the entire URL string (not just hostname), catching threats in paths like `example.com/virus.exe`. URLs containing "unsafe" or "risky" keywords are flagged as malicious. Internal `classifyUrl` helper per URL; exports `validateUrls(urls)` returning `[{ url, safe, reason }]` where reason is `'blacklisted'`, `'malicious'`, `'safe'`, or `'malformed'`. All matching is case-insensitive.
 
 ## Express 5 Best Practices
@@ -44,6 +49,17 @@ This is a Danish-language blog app with comment URL validation, built as an Expr
 - Uses Express 5 (not 4) — note API differences (e.g., `req.query` returns a getter, path-to-regexp v8).
 - **Do not wrap route handlers in `try/catch` for standard error passing.** Express 5 natively handles rejected promises from `async` route handlers by forwarding the error to the error-handling middleware. Rely on this built-in behaviour to reduce boilerplate. Only use `try/catch` when you need to handle a specific error locally (e.g., returning a custom 404).
 - Route handlers use `async/await`; let unhandled rejections propagate to Express's error pipeline.
+- **Strict type validation for incoming JSON payloads:** Always verify that fields from `req.body` are the expected primitive type (e.g. `typeof req.body.text === 'string'`) before using them. Mongoose does not protect against non-string values being passed where strings are expected — they can cause unexpected crashes or, in the case of objects, potential NoSQL injection. Reject requests with `400 Bad Request` if the payload does not conform.
+
+## Testing
+
+- `src/urlvalidator.js` and `src/utils/extractUrls.js` are fully unit-tested with Jest (`src/urlvalidator.test.js`, `src/utils/extractUrls.test.js`).
+- **All future utility modules must ship with Jest unit tests.** Tests must cover:
+  - **Edge cases and boundary conditions:** e.g. URLs with trailing punctuation (`.`, `,`, `)`, `"`), embedded URLs in prose, and empty input.
+  - **Type-safety:** passing `null`, `undefined`, numbers, objects, and other non-string values — these must not throw unhandled exceptions.
+  - **IDNs (Internationalized Domain Names):** URLs containing non-ASCII characters in the hostname.
+  - **Case-insensitivity:** confirm that matching behaves identically for mixed-case inputs.
+- Run tests with `npm test` before committing changes to any utility.
 
 ## Coding Standards
 
