@@ -343,6 +343,7 @@ body {
     display: grid;
     gap: var(--space-lg);
     grid-template-columns: 1fr;
+    margin-top: var(--space-2xl);
 }
 
 @media (min-width: 600px) {
