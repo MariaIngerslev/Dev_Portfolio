@@ -280,10 +280,22 @@ body {
     /* .prose on this element provides the 692px reading width */
 }
 
-/* Blogposts view: full-width grid container — mirrors home layout */
+/* Blogposts view: same escape-and-realign pattern as #view-cv.
+   Negative margins cancel .main-content's horizontal padding so that
+   #blog-list can centre itself against the same viewport edges as
+   .nav-container, putting blog cards on the exact same left axis as
+   the "Maria Ingerslev" logo. */
 #view-blogposts {
+    margin-left:  calc(-1 * var(--space-lg));
+    margin-right: calc(-1 * var(--space-lg));
+}
+
+/* Blog list: mirrors .nav-container / .cv-container centering and padding */
+#blog-list {
     max-width: var(--max-width-wide);
     margin: 0 auto;
+    padding-left:  var(--space-xl);
+    padding-right: var(--space-xl);
 }
 
 
@@ -1069,6 +1081,16 @@ a.contact-value:hover {
 
     .card-footer {
         padding: var(--space-md) var(--space-lg);
+    }
+
+    #view-blogposts {
+        margin-left:  calc(-1 * var(--space-md));
+        margin-right: calc(-1 * var(--space-md));
+    }
+
+    #blog-list {
+        padding-left:  var(--space-md);
+        padding-right: var(--space-md);
     }
 
     #view-cv {
