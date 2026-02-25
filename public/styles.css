@@ -881,9 +881,20 @@ a.contact-value:hover {
 
 
 /* ----- 14c. CV View ----- */
+#view-cv {
+    /* Cancel .main-content's horizontal padding so the cv-container can
+       centre itself against the same viewport edges as .nav-container. */
+    margin-left:  calc(-1 * var(--space-lg));
+    margin-right: calc(-1 * var(--space-lg));
+}
+
 .cv-container {
     max-width: var(--max-width-wide);
     margin: var(--space-2xl) auto 0;
+    /* Mirror .nav-container's horizontal padding so every element inside
+       (heading, subtitle, content grid) shares one left-alignment line
+       with the "Maria Ingerslev" logo in the nav. */
+    padding: 0 var(--space-xl);
 }
 
 .cv-header {
@@ -900,7 +911,6 @@ a.contact-value:hover {
     color: var(--color-text);
     line-height: 1.1;
     margin-bottom: var(--space-sm);
-    padding-left: var(--space-xl);
 }
 
 .cv-tagline {
@@ -1061,5 +1071,14 @@ a.contact-value:hover {
 
     .card-footer {
         padding: var(--space-md) var(--space-lg);
+    }
+
+    #view-cv {
+        margin-left:  calc(-1 * var(--space-md));
+        margin-right: calc(-1 * var(--space-md));
+    }
+
+    .cv-container {
+        padding: 0 var(--space-md);
     }
 }
