@@ -1,4 +1,3 @@
-
 Add a right-aligned navigation menu to the header with three links: "Blogpost", "CV", and "Contact". Update public/styles.css to style "Blogpost" and "CV" as plain text links with subtle hover states. Style the "Contact" link as a prominent black pill button (background: #1a1a1a, color: white, border-radius: 50px, padding: 8px 16px).
 
 Refactor the DOM generation for the home view in public/client.js. Create a new "Hero" section using the el() helper and place it above the blog cards. The Hero section must contain a massive H1 serif heading (e.g., "Idéer, kode og historier."), a small sans-serif sub-headline, and a pill-shaped primary button with the text "Find readings".
