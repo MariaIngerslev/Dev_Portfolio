@@ -1,4 +1,3 @@
-Update the main header navigation in public/index.html (or public/client.js if generated dynamically). Create a flexbox layout with 'justify-content: space-between'. On the left, style the "Maria Ingerslev" logo to be significantly larger using a bold Serif font, matching the Medium logo style. Add a thin solid bottom border to the entire header.
 
 Add a right-aligned navigation menu to the header with three links: "Blogpost", "CV", and "Contact". Update public/styles.css to style "Blogpost" and "CV" as plain text links with subtle hover states. Style the "Contact" link as a prominent black pill button (background: #1a1a1a, color: white, border-radius: 50px, padding: 8px 16px).
 
