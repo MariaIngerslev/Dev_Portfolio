@@ -3,7 +3,10 @@
 // Pre-compile route patterns once at load time instead of on every navigation
 const routes = [
     { path: '/', render: renderHome },
+    { path: '/blogposts', render: renderBlogposts },
     { path: '/posts/:id', render: renderPost },
+    { path: '/contact', render: renderContact },
+    { path: '/cv', render: renderCv },
 ].map(({ path, render }) => {
     const paramNames = [];
     const pattern = path.replace(/:([^/]+)/g, (_, name) => {
@@ -56,7 +59,10 @@ window.addEventListener('popstate', () => {
 // --- DOM References ---
 
 const viewHome = document.getElementById('view-home');
+const viewBlogposts = document.getElementById('view-blogposts');
 const viewPost = document.getElementById('view-post');
+const viewContact = document.getElementById('view-contact');
+const viewCv = document.getElementById('view-cv');
 const homeHero = document.getElementById('home-hero');
 const blogList = document.getElementById('blog-list');
 const fullPostContent = document.getElementById('full-post-content');
@@ -167,18 +173,28 @@ function setFeedback(message, state) {
 // --- View Switching ---
 
 function showView(name) {
-    const toShow = name === 'home' ? viewHome : viewPost;
-    const toHide = name === 'home' ? viewPost : viewHome;
+    const viewMap = {
+        home: viewHome,
+        blogposts: viewBlogposts,
+        post: viewPost,
+        contact: viewContact,
+        cv: viewCv,
+    };
+    const toShow = viewMap[name];
 
-    toHide.style.display = 'none';
+    Object.values(viewMap).forEach(v => {
+        if (v !== toShow) v.style.display = 'none';
+    });
 
-    // Remove class first so the animation re-fires on repeated visits
-    toShow.classList.remove('fade-in');
-    toShow.style.display = 'block';
-    // Force a style recalculation so the browser registers the class removal
-    // before we add it back, allowing the keyframe to restart.
-    void toShow.offsetHeight;
-    toShow.classList.add('fade-in');
+    if (toShow) {
+        // Remove class first so the animation re-fires on repeated visits
+        toShow.classList.remove('fade-in');
+        toShow.style.display = 'block';
+        // Force a style recalculation so the browser registers the class removal
+        // before we add it back, allowing the keyframe to restart.
+        void toShow.offsetHeight;
+        toShow.classList.add('fade-in');
+    }
 }
 
 // --- Render Functions ---
@@ -216,7 +232,7 @@ function createHeroSection() {
 
     const ctaButton = el('button', 'btn btn-primary hero-cta', 'Find readings');
     ctaButton.addEventListener('click', () => {
-        blogList.scrollIntoView({ behavior: 'smooth' });
+        navigateTo('/blogposts');
     });
 
     section.append(heading, subheadline, ctaButton);
@@ -279,6 +295,11 @@ async function renderHome() {
     if (!homeHero.hasChildNodes()) {
         homeHero.appendChild(createHeroSection());
     }
+}
+
+async function renderBlogposts() {
+    showView('blogposts');
+    currentPostId = null;
 
     blogList.textContent = '';
     blogList.appendChild(createLoadingIndicator('Henter indlæg...'));
@@ -290,6 +311,16 @@ async function renderHome() {
         blogList.textContent = '';
         console.error('Error loading posts:', error);
     }
+}
+
+function renderContact() {
+    showView('contact');
+    currentPostId = null;
+}
+
+function renderCv() {
+    showView('cv');
+    currentPostId = null;
 }
 
 async function renderPost(params) {

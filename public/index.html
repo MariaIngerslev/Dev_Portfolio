@@ -14,9 +14,9 @@
                 <h1>Maria Ingerslev</h1>
             </a>
             <nav class="header-nav">
-                <a href="#blogpost" class="nav-link">Blogpost</a>
-                <a href="#cv" class="nav-link">CV</a>
-                <a href="#contact" class="nav-link nav-link--contact">Contact</a>
+                <a href="/blogposts" class="nav-link">Blogposts</a>
+                <a href="/cv" class="nav-link">CV</a>
+                <a href="/contact" class="nav-link nav-link--contact">Contact</a>
             </nav>
         </nav>
     </header>
@@ -25,6 +25,10 @@
         <!-- ===== HOME VIEW ===== -->
         <section id="view-home">
             <div id="home-hero"></div>
+        </section>
+
+        <!-- ===== BLOGPOSTS VIEW ===== -->
+        <section id="view-blogposts" style="display: none;">
             <div id="blog-list" class="blog-grid">
                 <!-- Populated dynamically by client.js -->
             </div>
@@ -70,6 +74,138 @@
 
                 <div id="feedback-message" class="feedback" role="status" aria-live="polite"></div>
             </section>
+        </section>
+        <!-- ===== CONTACT VIEW ===== -->
+        <section id="view-contact" style="display: none;">
+            <div class="page-container">
+                <h2 class="page-heading">Kontakt</h2>
+                <ul class="contact-list">
+                    <li class="contact-item">
+                        <span class="contact-label">Mail</span>
+                        <a href="mailto:maria_ingerslev@hotmail.com" class="contact-value">maria_ingerslev@hotmail.com</a>
+                    </li>
+                    <li class="contact-item">
+                        <span class="contact-label">Telefon</span>
+                        <span class="contact-value">+45 42 52 94 17</span>
+                    </li>
+                    <li class="contact-item">
+                        <span class="contact-label">Lokation</span>
+                        <span class="contact-value">Aarhus, DK</span>
+                    </li>
+                    <li class="contact-item">
+                        <span class="contact-label">LinkedIn</span>
+                        <a href="https://linkedin.com/in/mariaingerslev" class="contact-value">linkedin.com/in/mariaingerslev</a>
+                    </li>
+                    <li class="contact-item">
+                        <span class="contact-label">GitHub</span>
+                        <a href="https://github.com/MariaIngerslev" class="contact-value">github.com/MariaIngerslev</a>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- ===== CV VIEW ===== -->
+        <section id="view-cv" style="display: none;">
+            <div class="cv-container">
+                <header class="cv-header">
+                    <h1 class="cv-name">Maria Schultz Ingerslev</h1>
+                    <p class="cv-tagline">Datamatikerstuderende &amp; Kvalitetsbevidst Softwareudvikler</p>
+                </header>
+
+                <div class="cv-body">
+                    <aside class="cv-sidebar">
+                        <section class="cv-section">
+                            <h2 class="cv-section-title">Profil</h2>
+                            <p>Struktureret og ambitiøs datamatikerstuderende med en unik baggrund i højt regulerede miljøer. Jeg kombinerer en voksende teknisk værktøjskasse med års erfaring inden for kvalitetssikring (QA) og dokumentation. Jeg brænder for at bygge bro mellem komplekse IT-systemer og de mennesker, der bruger dem.</p>
+                        </section>
+
+                        <section class="cv-section">
+                            <h2 class="cv-section-title">IT &amp; Værktøjer</h2>
+                            <ul class="cv-skills-list">
+                                <li>Java, OOP</li>
+                                <li>JavaScript</li>
+                                <li>API Integration (REST)</li>
+                                <li>MongoDB/Database</li>
+                                <li>Jira, Git/GitHub</li>
+                                <li>HTML/CSS</li>
+                                <li>Claude code</li>
+                                <li>AI Agents &amp; Automation</li>
+                            </ul>
+                        </section>
+
+                        <section class="cv-section">
+                            <h2 class="cv-section-title">Drift &amp; Processer</h2>
+                            <ul class="cv-skills-list">
+                                <li>Incident Management</li>
+                                <li>Teknisk Dokumentation</li>
+                                <li>QA</li>
+                                <li>Procesoptimering</li>
+                            </ul>
+                        </section>
+
+                        <section class="cv-section">
+                            <h2 class="cv-section-title">Personligt</h2>
+                            <ul class="cv-skills-list">
+                                <li>Brugerkommunikation</li>
+                                <li>Strukturelt Overblik</li>
+                                <li>Empati &amp; Integritet</li>
+                                <li>Problemløsning</li>
+                            </ul>
+                        </section>
+
+                        <section class="cv-section">
+                            <h2 class="cv-section-title">Detaljer</h2>
+                            <dl class="cv-details-list">
+                                <dt>Sprog</dt>
+                                <dd>Dansk (Modersmål), Engelsk (Flydende)</dd>
+                                <dt>Bopæl</dt>
+                                <dd>Danmark (&gt;7 år)</dd>
+                                <dt>Straffeattest</dt>
+                                <dd>Ren</dd>
+                            </dl>
+                        </section>
+                    </aside>
+
+                    <div class="cv-main">
+                        <section class="cv-section">
+                            <h2 class="cv-section-title">Uddannelse</h2>
+                            <div class="cv-entry">
+                                <h3 class="cv-entry-title">Datamatiker (AP Degree)</h3>
+                                <p class="cv-entry-meta">Erhvervsakademi Aarhus &middot; Jan 2026 – Nu</p>
+                                <p>Fokus på systemudvikling, softwarearkitektur, Java og OOP.</p>
+                            </div>
+                            <div class="cv-entry">
+                                <h3 class="cv-entry-title">The Odin Project Fundamentals</h3>
+                                <p class="cv-entry-meta">100% Gennemført</p>
+                                <p>Fokus på Clean Code, Git, debugging, simulerede agile workflows (Jira).</p>
+                            </div>
+                        </section>
+
+                        <section class="cv-section">
+                            <h2 class="cv-section-title">Erfaring</h2>
+                            <div class="cv-entry">
+                                <h3 class="cv-entry-title">Proceskoordinator &amp; Systemnavigator</h3>
+                                <p class="cv-entry-meta">2018 – 2024</p>
+                                <p>Kompleks sagsstyring, brobygning og domæneforståelse, dokumentation.</p>
+                            </div>
+                            <div class="cv-entry">
+                                <h3 class="cv-entry-title">Handicapmedhjælper / PA</h3>
+                                <p class="cv-entry-meta">Dec 2015 – Jul 2021</p>
+                                <p>Ansvarsfuldt arbejde med medicin, sikkerhed og daglig planlægning.</p>
+                            </div>
+                            <div class="cv-entry">
+                                <h3 class="cv-entry-title">Laborant (Laboratory Technician)</h3>
+                                <p class="cv-entry-meta">SellmerDiers Sperm Bank &middot; 2017 – 2018</p>
+                                <p>QA af data og prøver, sundhedslovgivning.</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+
+                <footer class="cv-footer">
+                    <p>&copy; 2026 Maria Schultz Ingerslev - Genereret til Systematic Ansøgning.</p>
+                </footer>
+            </div>
         </section>
     </main>
 

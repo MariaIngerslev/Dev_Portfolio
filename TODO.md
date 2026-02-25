@@ -1,1 +1,1 @@
-Update public/client.js to implement a smooth scroll interaction. When the user clicks the "Find readings" button in the Hero section, the page should smoothly scroll down to the container holding the actual blog posts. Add top margin to the blog posts container to separate it clearly from the Hero section.
+## ✅ DONE: Update Navigation, Routing, and Add CV/Contact Views
