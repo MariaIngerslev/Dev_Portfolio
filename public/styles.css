@@ -901,6 +901,7 @@ a.contact-value:hover {
     color: var(--color-text);
     line-height: 1.1;
     margin-bottom: var(--space-sm);
+    padding-left: var(--space-xl);
 }
 
 .cv-tagline {
