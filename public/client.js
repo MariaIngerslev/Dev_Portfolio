@@ -165,8 +165,18 @@ function setFeedback(message, state) {
 // --- View Switching ---
 
 function showView(name) {
-    viewHome.style.display = name === 'home' ? 'block' : 'none';
-    viewPost.style.display = name === 'post' ? 'block' : 'none';
+    const toShow = name === 'home' ? viewHome : viewPost;
+    const toHide = name === 'home' ? viewPost : viewHome;
+
+    toHide.style.display = 'none';
+
+    // Remove class first so the animation re-fires on repeated visits
+    toShow.classList.remove('fade-in');
+    toShow.style.display = 'block';
+    // Force a style recalculation so the browser registers the class removal
+    // before we add it back, allowing the keyframe to restart.
+    void toShow.offsetHeight;
+    toShow.classList.add('fade-in');
 }
 
 // --- Render Functions ---

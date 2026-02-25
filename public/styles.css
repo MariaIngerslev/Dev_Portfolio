@@ -1,0 +1,697 @@
+/* ============================================================
+   DEV PORTFOLIO — Design System & Stylesheet
+   Modern, minimalist, reader-first.
+   ============================================================ */
+
+
+/* ----- 1. CSS Variables (Design Tokens) ----- */
+:root {
+    /* Colors — warm off-white background, near-black text */
+    --color-bg:            #f7f6f3;
+    --color-surface:       #ffffff;
+    --color-text:          #1c1c1e;
+    --color-text-muted:    #6b7280;
+    --color-border:        #e5e7eb;
+
+    --color-primary:       #4f46e5;
+    --color-primary-hover: #4338ca;
+    --color-primary-light: #eef2ff;
+
+    --color-success:       #16a34a;
+    --color-success-bg:    #f0fdf4;
+    --color-success-border:#bbf7d0;
+
+    --color-warning:       #b45309;
+    --color-warning-bg:    #fffbeb;
+    --color-warning-border:#fde68a;
+
+    --color-error:         #dc2626;
+    --color-error-bg:      #fef2f2;
+    --color-error-border:  #fecaca;
+
+    /* Typography */
+    --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                  'Helvetica Neue', Arial, sans-serif;
+    --font-serif: Georgia, 'Palatino Linotype', Palatino, 'Book Antiqua', serif;
+
+    --font-size-xs:   0.75rem;
+    --font-size-sm:   0.875rem;
+    --font-size-base: 1rem;
+    --font-size-lg:   1.125rem;
+    --font-size-xl:   1.35rem;
+    --font-size-2xl:  1.875rem;
+
+    --line-height:         1.6;
+    --line-height-relaxed: 1.75;
+
+    /* Spacing */
+    --space-xs:  0.25rem;
+    --space-sm:  0.5rem;
+    --space-md:  1rem;
+    --space-lg:  1.5rem;
+    --space-xl:  2rem;
+    --space-2xl: 3rem;
+
+    /* Layout */
+    --max-width:      65ch;    /* prose reading width */
+    --max-width-wide: 1100px;  /* home-view grid width */
+    --header-height:  64px;
+
+    /* Effects */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.10);
+
+    --transition: 160ms ease;
+}
+
+
+/* ----- 2. Reset & Base ----- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* ----- 3. Animations ----- */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeInUp 0.22s ease forwards;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.55; }
+}
+
+
+/* ----- 4. Utility: Prose ----- */
+/*
+ * Constrains a content block to a comfortable reading line length and
+ * centres it within its parent. Apply to any long-form content container.
+ */
+.prose {
+    max-width: 65ch;
+    margin-inline: auto;
+}
+
+
+/* ----- 5. Sticky Header / Navigation ----- */
+.site-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-height);
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-container {
+    max-width: var(--max-width-wide);
+    height: 100%;
+    margin: 0 auto;
+    padding: 0 var(--space-lg);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.site-logo {
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity var(--transition);
+}
+
+.site-logo:hover {
+    opacity: 0.7;
+}
+
+.site-logo h1 {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: -0.025em;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.nav-tagline {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    display: none;
+    font-style: italic;
+}
+
+@media (min-width: 540px) {
+    .nav-tagline {
+        display: inline;
+    }
+}
+
+
+/* ----- 6. Main Content Area ----- */
+.main-content {
+    flex: 1;
+    width: 100%;
+    padding: var(--space-xl) var(--space-lg);
+}
+
+/* Home view: full-width grid container */
+#view-home {
+    max-width: var(--max-width-wide);
+    margin: 0 auto;
+}
+
+/* Post view: constrained via .prose applied in HTML */
+#view-post {
+    /* .prose on this element provides the 65ch max-width */
+}
+
+.page-title {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text);
+}
+
+
+/* ----- 7. Blog Cards — Responsive Grid ----- */
+.blog-grid {
+    display: grid;
+    gap: var(--space-lg);
+    grid-template-columns: 1fr;
+}
+
+@media (min-width: 600px) {
+    .blog-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 900px) {
+    .blog-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.blog-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow var(--transition), transform var(--transition),
+                border-color var(--transition);
+}
+
+.blog-card:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    border-color: transparent;
+}
+
+.card-body {
+    padding: var(--space-xl);
+    flex: 1;
+}
+
+.card-tag {
+    display: inline-block;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--color-primary);
+    background: var(--color-primary-light);
+    padding: 0.2rem 0.55rem;
+    border-radius: var(--radius-sm);
+    margin-bottom: var(--space-md);
+}
+
+.card-title {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.25;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text);
+}
+
+.card-date {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-md);
+}
+
+.card-excerpt {
+    color: var(--color-text-muted);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+}
+
+.card-footer {
+    padding: var(--space-md) var(--space-xl);
+    border-top: 1px solid var(--color-border);
+}
+
+
+/* ----- 8. Buttons ----- */
+.btn,
+.read-more-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    padding: 0.6rem 1.25rem;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-decoration: none;
+    transition: background var(--transition), box-shadow var(--transition),
+                transform var(--transition), opacity var(--transition),
+                color var(--transition), border-color var(--transition);
+}
+
+/* Primary button */
+.btn-primary {
+    color: #ffffff;
+    background: var(--color-primary);
+    box-shadow: 0 1px 3px rgba(79, 70, 229, 0.25);
+}
+
+.btn-primary:hover {
+    background: var(--color-primary-hover);
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(79, 70, 229, 0.2);
+}
+
+.btn-primary:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+/* Read-more link-button */
+.read-more-btn {
+    color: var(--color-primary);
+    background: transparent;
+    padding: 0.4rem 0;
+    border-radius: 0;
+    font-weight: 600;
+}
+
+.read-more-btn:hover {
+    opacity: 0.7;
+}
+
+/* Back button */
+.btn-back {
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    margin-bottom: var(--space-xl);
+}
+
+.btn-back:hover {
+    background: var(--color-bg);
+    color: var(--color-text);
+    border-color: #9ca3af;
+}
+
+.btn-back:focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 3px;
+}
+
+
+/* ----- 9. Post Article (Single Post View) ----- */
+.post-article {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-2xl);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-xl);
+}
+
+.post-article h2 {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.2;
+    margin-bottom: var(--space-sm);
+    color: var(--color-text);
+}
+
+.post-article h3 {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-md);
+    color: var(--color-text);
+}
+
+/* Date stamp below the post title */
+.post-date {
+    display: block;
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
+}
+
+/* Article body uses a serif for comfortable long-form reading */
+.post-article p {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+}
+
+.post-article ul,
+.post-article ol {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text);
+    margin-bottom: var(--space-lg);
+    padding-left: var(--space-xl);
+}
+
+.post-article li {
+    margin-bottom: var(--space-xs);
+}
+
+.post-article code {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 0.15em 0.45em;
+    font-size: 0.875em;
+    color: var(--color-text);
+}
+
+.post-article blockquote {
+    border-left: 3px solid var(--color-primary);
+    padding-left: var(--space-lg);
+    margin: var(--space-xl) 0;
+    color: var(--color-text-muted);
+    font-style: italic;
+    font-family: var(--font-serif);
+}
+
+.post-article strong {
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+.section-divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: var(--space-xl) 0;
+}
+
+
+/* ----- 10. Comments Section ----- */
+.section-title {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: var(--space-lg);
+}
+
+.comment-card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-md);
+    box-shadow: var(--shadow-sm);
+    transition: border-color var(--transition);
+}
+
+.comment-card:hover {
+    border-color: var(--color-primary-light);
+}
+
+.comment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+}
+
+.comment-header strong {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.comment-card > p {
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    line-height: var(--line-height-relaxed);
+}
+
+
+/* ----- 11. Comment Form ----- */
+.comment-form {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-sm);
+    margin-top: var(--space-lg);
+}
+
+.form-title {
+    font-size: var(--font-size-lg);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: var(--space-lg);
+}
+
+.form-group {
+    margin-bottom: var(--space-lg);
+}
+
+.form-label {
+    display: block;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-xs);
+    letter-spacing: 0.01em;
+}
+
+.form-input,
+.form-textarea {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background: var(--color-bg);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.6875rem 0.875rem;
+    appearance: none;
+    transition: border-color var(--transition), box-shadow var(--transition),
+                background var(--transition);
+}
+
+.form-input:hover,
+.form-textarea:hover {
+    border-color: #d1d5db;
+}
+
+.form-input:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    background: var(--color-surface);
+}
+
+/* Stronger ring for keyboard navigators on supporting browsers */
+.form-input:focus-visible,
+.form-textarea:focus-visible {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    background: var(--color-surface);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--color-text-muted);
+    opacity: 0.55;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 110px;
+    line-height: var(--line-height-relaxed);
+}
+
+.form-checkbox-group {
+    margin-bottom: var(--space-lg);
+}
+
+.checkbox-label {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    cursor: pointer;
+    user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+}
+
+
+/* ----- 12. Feedback States ----- */
+.feedback {
+    margin-top: var(--space-lg);
+    border-radius: var(--radius-md);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    line-height: 1.5;
+}
+
+/* Only show padding/border when there is content */
+.feedback:not(:empty) {
+    padding: var(--space-md) var(--space-lg);
+    border: 1px solid transparent;
+}
+
+.feedback-loading {
+    color: var(--color-primary);
+    background: var(--color-primary-light);
+    border-color: rgba(79, 70, 229, 0.25) !important;
+    animation: pulse 1.4s ease-in-out infinite;
+}
+
+.feedback-success {
+    color: var(--color-success);
+    background: var(--color-success-bg);
+    border-color: var(--color-success-border) !important;
+}
+
+.feedback-warning {
+    color: var(--color-warning);
+    background: var(--color-warning-bg);
+    border-color: var(--color-warning-border) !important;
+}
+
+.feedback-error {
+    color: var(--color-error);
+    background: var(--color-error-bg);
+    border-color: var(--color-error-border) !important;
+}
+
+
+/* ----- 13. Footer ----- */
+.site-footer {
+    text-align: center;
+    padding: var(--space-xl) var(--space-lg);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-muted);
+    border-top: 1px solid var(--color-border);
+    margin-top: auto;
+}
+
+
+/* ----- 14. Responsive Adjustments (Mobile-First) ----- */
+@media (max-width: 600px) {
+    :root {
+        --font-size-2xl: 1.5rem;
+        --font-size-xl:  1.2rem;
+    }
+
+    .main-content {
+        padding: var(--space-lg) var(--space-md);
+    }
+
+    .nav-container {
+        padding: 0 var(--space-md);
+    }
+
+    .post-article {
+        padding: var(--space-lg);
+    }
+
+    .comment-form {
+        padding: var(--space-lg);
+    }
+
+    .card-body {
+        padding: var(--space-lg);
+    }
+
+    .card-footer {
+        padding: var(--space-md) var(--space-lg);
+    }
+}
