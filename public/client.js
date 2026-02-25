@@ -57,6 +57,7 @@ window.addEventListener('popstate', () => {
 
 const viewHome = document.getElementById('view-home');
 const viewPost = document.getElementById('view-post');
+const homeHero = document.getElementById('home-hero');
 const blogList = document.getElementById('blog-list');
 const fullPostContent = document.getElementById('full-post-content');
 const commentsList = document.getElementById('comments-list');
@@ -207,6 +208,21 @@ function createBlogCard(post) {
     return article;
 }
 
+function createHeroSection() {
+    const section = el('div', 'hero');
+
+    const heading = el('h1', 'hero-title', 'Idéer, kode og historier.');
+    const subheadline = el('p', 'hero-subtitle', 'En blog om kode, projekter og nysgerrighed.');
+
+    const ctaButton = el('button', 'btn btn-primary hero-cta', 'Find readings');
+    ctaButton.addEventListener('click', () => {
+        blogList.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    section.append(heading, subheadline, ctaButton);
+    return section;
+}
+
 function renderPostList(posts) {
     const fragment = document.createDocumentFragment();
     posts.forEach((post) => fragment.appendChild(createBlogCard(post)));
@@ -259,6 +275,10 @@ function createLoadingIndicator(message) {
 async function renderHome() {
     showView('home');
     currentPostId = null;
+
+    if (!homeHero.hasChildNodes()) {
+        homeHero.appendChild(createHeroSection());
+    }
 
     blogList.textContent = '';
     blogList.appendChild(createLoadingIndicator('Henter indlæg...'));
