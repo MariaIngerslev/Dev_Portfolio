@@ -1,48 +1,50 @@
 /* ============================================================
-   DEV PORTFOLIO — Design System & Stylesheet
-   Modern, minimalist, reader-first.
+   DANSK BLOG — Design System & Stylesheet
+   Medium-inspired: warm parchment, editorial serif, minimal.
    ============================================================ */
 
 
 /* ----- 1. CSS Variables (Design Tokens) ----- */
 :root {
-    /* Colors — warm off-white background, near-black text */
-    --color-bg:            #f7f6f3;
+    /* Colors — warm parchment palette, minimal accent */
+    --color-bg:            #f2f0eb;      /* Medium's signature warm cream */
     --color-surface:       #ffffff;
-    --color-text:          #1c1c1e;
-    --color-text-muted:    #6b7280;
-    --color-border:        #e5e7eb;
+    --color-text:          #242424;      /* near-black, not pure black */
+    --color-text-muted:    #757575;
+    --color-border:        #e0ddd6;      /* warm-tinted, barely-there */
 
-    --color-primary:       #4f46e5;
-    --color-primary-hover: #4338ca;
-    --color-primary-light: #eef2ff;
+    --color-primary:       #1a8917;      /* Medium green — tags & inline links */
+    --color-primary-hover: #0f730c;
+    --color-primary-light: #e8f5e8;
 
-    --color-success:       #16a34a;
-    --color-success-bg:    #f0fdf4;
-    --color-success-border:#bbf7d0;
+    --color-action:        #1a1a1a;      /* dark pill button fill */
+    --color-action-hover:  #3d3d3d;
+
+    --color-success:       #1a8917;
+    --color-success-bg:    #e8f5e8;
+    --color-success-border:#a8d5a8;
 
     --color-warning:       #b45309;
     --color-warning-bg:    #fffbeb;
     --color-warning-border:#fde68a;
 
-    --color-error:         #dc2626;
+    --color-error:         #c62828;
     --color-error-bg:      #fef2f2;
-    --color-error-border:  #fecaca;
+    --color-error-border:  #f5c6c6;
 
-    /* Typography */
-    --font-sans:  -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-                  'Helvetica Neue', Arial, sans-serif;
-    --font-serif: Georgia, 'Palatino Linotype', Palatino, 'Book Antiqua', serif;
+    /* Typography — editorial serif for content, grotesque for UI */
+    --font-sans:  'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-serif: Georgia, 'Book Antiqua', Palatino, serif;
 
-    --font-size-xs:   0.75rem;
-    --font-size-sm:   0.875rem;
-    --font-size-base: 1rem;
-    --font-size-lg:   1.125rem;
-    --font-size-xl:   1.35rem;
-    --font-size-2xl:  1.875rem;
+    --font-size-xs:   0.6875rem;   /*  11px */
+    --font-size-sm:   0.8125rem;   /*  13px */
+    --font-size-base: 1rem;        /*  16px */
+    --font-size-lg:   1.125rem;    /*  18px */
+    --font-size-xl:   1.375rem;    /*  22px */
+    --font-size-2xl:  1.875rem;    /*  30px */
 
     --line-height:         1.6;
-    --line-height-relaxed: 1.75;
+    --line-height-relaxed: 1.8;
 
     /* Spacing */
     --space-xs:  0.25rem;
@@ -53,21 +55,22 @@
     --space-2xl: 3rem;
 
     /* Layout */
-    --max-width:      65ch;    /* prose reading width */
-    --max-width-wide: 1100px;  /* home-view grid width */
-    --header-height:  64px;
+    --max-width:      692px;       /* Medium's reading-column width */
+    --max-width-wide: 1192px;
+    --header-height:  57px;
 
-    /* Effects */
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    /* Shape & Motion */
+    --radius-sm:   2px;
+    --radius-md:   4px;
+    --radius-lg:   6px;
+    --radius-xl:   8px;
+    --radius-pill: 100px;          /* pill-shaped buttons */
 
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.10);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.07);
+    --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.09);
 
-    --transition: 160ms ease;
+    --transition: 130ms ease;
 }
 
 
@@ -103,7 +106,7 @@ body {
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(10px);
+        transform: translateY(8px);
     }
     to {
         opacity: 1;
@@ -112,12 +115,12 @@ body {
 }
 
 .fade-in {
-    animation: fadeInUp 0.22s ease forwards;
+    animation: fadeInUp 0.2s ease forwards;
 }
 
 @keyframes pulse {
     0%, 100% { opacity: 1; }
-    50%       { opacity: 0.55; }
+    50%       { opacity: 0.5; }
 }
 
 @keyframes spin {
@@ -138,12 +141,12 @@ body {
 
 .loading-spinner {
     display: inline-block;
-    width: 18px;
-    height: 18px;
-    border: 2px solid var(--color-border);
-    border-top-color: var(--color-primary);
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--color-border);
+    border-top-color: var(--color-text-muted);
     border-radius: 50%;
-    animation: spin 0.65s linear infinite;
+    animation: spin 0.7s linear infinite;
     flex-shrink: 0;
 }
 
@@ -154,7 +157,7 @@ body {
  * centres it within its parent. Apply to any long-form content container.
  */
 .prose {
-    max-width: 65ch;
+    max-width: var(--max-width);
     margin-inline: auto;
 }
 
@@ -165,18 +168,17 @@ body {
     top: 0;
     z-index: 100;
     height: var(--header-height);
-    background: rgba(255, 255, 255, 0.88);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: rgba(242, 240, 235, 0.92); /* same warm cream as --color-bg */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--color-border);
-    box-shadow: var(--shadow-sm);
 }
 
 .nav-container {
     max-width: var(--max-width-wide);
     height: 100%;
     margin: 0 auto;
-    padding: 0 var(--space-lg);
+    padding: 0 var(--space-xl);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -189,16 +191,18 @@ body {
 }
 
 .site-logo:hover {
-    opacity: 0.7;
+    opacity: 0.65;
 }
 
+/* Serif logo — editorial masthead feel */
 .site-logo h1 {
+    font-family: var(--font-serif);
     font-size: var(--font-size-xl);
     font-weight: 700;
-    color: var(--color-primary);
-    letter-spacing: -0.025em;
+    color: var(--color-text);
+    letter-spacing: -0.02em;
     margin: 0;
-    line-height: 1.2;
+    line-height: 1;
 }
 
 .nav-tagline {
@@ -230,13 +234,15 @@ body {
 
 /* Post view: constrained via .prose applied in HTML */
 #view-post {
-    /* .prose on this element provides the 65ch max-width */
+    /* .prose on this element provides the 692px reading width */
 }
 
+/* Serif page title — matches editorial masthead tone */
 .page-title {
+    font-family: var(--font-serif);
     font-size: var(--font-size-2xl);
     font-weight: 700;
-    letter-spacing: -0.025em;
+    letter-spacing: -0.03em;
     margin-bottom: var(--space-xl);
     color: var(--color-text);
 }
@@ -261,61 +267,66 @@ body {
     }
 }
 
+/* White card floating on warm cream — flat, editorial */
 .blog-card {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
-    box-shadow: var(--shadow-sm);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transition: box-shadow var(--transition), transform var(--transition),
-                border-color var(--transition);
+    transition: border-color var(--transition), box-shadow var(--transition);
 }
 
 .blog-card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-3px);
-    border-color: transparent;
+    border-color: #c4c1ba;
+    box-shadow: var(--shadow-md);
 }
 
 .card-body {
-    padding: var(--space-xl);
+    padding: var(--space-xl) var(--space-xl) var(--space-md);
     flex: 1;
 }
 
+/* Green pill tag — Medium publication label */
 .card-tag {
     display: inline-block;
+    font-family: var(--font-sans);
     font-size: var(--font-size-xs);
-    font-weight: 700;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
     color: var(--color-primary);
     background: var(--color-primary-light);
-    padding: 0.2rem 0.55rem;
-    border-radius: var(--radius-sm);
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-pill);
     margin-bottom: var(--space-md);
 }
 
+/* Serif card title — editorial headline feel */
 .card-title {
+    font-family: var(--font-serif);
     font-size: var(--font-size-xl);
     font-weight: 700;
     letter-spacing: -0.02em;
-    line-height: 1.25;
+    line-height: 1.3;
     margin-bottom: var(--space-xs);
     color: var(--color-text);
 }
 
 .card-date {
     display: block;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     margin-bottom: var(--space-md);
+    letter-spacing: 0.01em;
 }
 
+/* Serif excerpt — matches reading body text style */
 .card-excerpt {
     color: var(--color-text-muted);
-    font-size: var(--font-size-base);
+    font-family: var(--font-serif);
+    font-size: var(--font-size-sm);
     line-height: var(--line-height-relaxed);
 }
 
@@ -333,62 +344,59 @@ body {
     gap: var(--space-sm);
     font-family: var(--font-sans);
     font-size: var(--font-size-sm);
-    font-weight: 600;
-    padding: 0.6rem 1.25rem;
+    font-weight: 500;
+    padding: 0.5rem 1.1rem;
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-pill);
     cursor: pointer;
     text-decoration: none;
-    transition: background var(--transition), box-shadow var(--transition),
-                transform var(--transition), opacity var(--transition),
-                color var(--transition), border-color var(--transition);
+    transition: background var(--transition), color var(--transition),
+                box-shadow var(--transition), opacity var(--transition),
+                border-color var(--transition);
 }
 
-/* Primary button */
+/* Primary: dark pill — "Start reading" / "Get started" Medium style */
 .btn-primary {
     color: #ffffff;
-    background: var(--color-primary);
-    box-shadow: 0 1px 3px rgba(79, 70, 229, 0.25);
+    background: var(--color-action);
+    letter-spacing: 0.01em;
 }
 
 .btn-primary:hover {
-    background: var(--color-primary-hover);
-    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.3);
-    transform: translateY(-1px);
+    background: var(--color-action-hover);
 }
 
 .btn-primary:active {
-    transform: translateY(0);
-    box-shadow: 0 1px 3px rgba(79, 70, 229, 0.2);
+    background: #111111;
 }
 
 .btn-primary:focus-visible {
-    outline: 3px solid var(--color-primary);
+    outline: 3px solid var(--color-action);
     outline-offset: 3px;
 }
 
 .btn-primary:disabled {
-    opacity: 0.6;
+    opacity: 0.4;
     cursor: not-allowed;
     pointer-events: none;
-    transform: none;
-    box-shadow: none;
 }
 
-/* Read-more link-button */
+/* Read-more: plain text link — editorial, no button chrome */
 .read-more-btn {
-    color: var(--color-primary);
+    color: var(--color-text);
     background: transparent;
-    padding: 0.4rem 0;
+    padding: 0.35rem 0;
     border-radius: 0;
-    font-weight: 600;
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    letter-spacing: 0.01em;
 }
 
 .read-more-btn:hover {
-    opacity: 0.7;
+    color: var(--color-primary);
 }
 
-/* Back button */
+/* Back button — outlined pill */
 .btn-back {
     color: var(--color-text-muted);
     background: var(--color-surface);
@@ -399,11 +407,11 @@ body {
 .btn-back:hover {
     background: var(--color-bg);
     color: var(--color-text);
-    border-color: #9ca3af;
+    border-color: #c4c1ba;
 }
 
 .btn-back:focus-visible {
-    outline: 3px solid var(--color-primary);
+    outline: 3px solid var(--color-action);
     outline-offset: 3px;
 }
 
@@ -414,11 +422,12 @@ body {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
     padding: var(--space-2xl);
-    box-shadow: var(--shadow-sm);
     margin-bottom: var(--space-xl);
 }
 
+/* Serif post title — flagship editorial headline */
 .post-article h2 {
+    font-family: var(--font-serif);
     font-size: var(--font-size-2xl);
     font-weight: 700;
     letter-spacing: -0.03em;
@@ -428,6 +437,7 @@ body {
 }
 
 .post-article h3 {
+    font-family: var(--font-serif);
     font-size: var(--font-size-lg);
     font-weight: 600;
     letter-spacing: -0.01em;
@@ -439,14 +449,15 @@ body {
 /* Date stamp below the post title */
 .post-date {
     display: block;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
     margin-bottom: var(--space-xl);
     padding-bottom: var(--space-lg);
     border-bottom: 1px solid var(--color-border);
+    letter-spacing: 0.01em;
 }
 
-/* Article body uses a serif for comfortable long-form reading */
+/* Article body: serif for long-form reading comfort */
 .post-article p {
     font-family: var(--font-serif);
     font-size: 1.0625rem;
@@ -474,13 +485,14 @@ body {
     background: var(--color-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
-    padding: 0.15em 0.45em;
+    padding: 0.15em 0.4em;
     font-size: 0.875em;
     color: var(--color-text);
 }
 
+/* Minimal blockquote — thin muted left rule */
 .post-article blockquote {
-    border-left: 3px solid var(--color-primary);
+    border-left: 2px solid var(--color-text-muted);
     padding-left: var(--space-lg);
     margin: var(--space-xl) 0;
     color: var(--color-text-muted);
@@ -502,10 +514,12 @@ body {
 
 /* ----- 10. Comments Section ----- */
 .section-title {
+    font-family: var(--font-serif);
     font-size: var(--font-size-xl);
     font-weight: 700;
     letter-spacing: -0.02em;
     margin-bottom: var(--space-lg);
+    color: var(--color-text);
 }
 
 .comment-card {
@@ -514,12 +528,11 @@ body {
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     margin-bottom: var(--space-md);
-    box-shadow: var(--shadow-sm);
     transition: border-color var(--transition);
 }
 
 .comment-card:hover {
-    border-color: var(--color-primary-light);
+    border-color: #c4c1ba;
 }
 
 .comment-header {
@@ -529,13 +542,14 @@ body {
     flex-wrap: wrap;
     gap: var(--space-sm);
     margin-bottom: var(--space-sm);
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     color: var(--color-text-muted);
 }
 
 .comment-header strong {
     color: var(--color-text);
     font-weight: 600;
+    font-size: var(--font-size-sm);
 }
 
 .comment-card > p {
@@ -551,28 +565,31 @@ body {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-xl);
     padding: var(--space-xl);
-    box-shadow: var(--shadow-sm);
     margin-top: var(--space-lg);
 }
 
 .form-title {
+    font-family: var(--font-serif);
     font-size: var(--font-size-lg);
     font-weight: 700;
     letter-spacing: -0.01em;
     margin-bottom: var(--space-lg);
+    color: var(--color-text);
 }
 
 .form-group {
     margin-bottom: var(--space-lg);
 }
 
+/* Uppercase label — editorial caption style */
 .form-label {
     display: block;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     font-weight: 600;
     color: var(--color-text-muted);
     margin-bottom: var(--space-xs);
-    letter-spacing: 0.01em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 .form-input,
@@ -582,7 +599,7 @@ body {
     font-size: var(--font-size-base);
     color: var(--color-text);
     background: var(--color-bg);
-    border: 1.5px solid var(--color-border);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     padding: 0.6875rem 0.875rem;
     appearance: none;
@@ -592,30 +609,29 @@ body {
 
 .form-input:hover,
 .form-textarea:hover {
-    border-color: #d1d5db;
+    border-color: #c4c1ba;
 }
 
+/* Focus: near-black border, no coloured glow */
 .form-input:focus,
 .form-textarea:focus {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.12);
+    border-color: var(--color-text);
     background: var(--color-surface);
 }
 
-/* Stronger ring for keyboard navigators on supporting browsers */
 .form-input:focus-visible,
 .form-textarea:focus-visible {
     outline: none;
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    border-color: var(--color-text);
+    box-shadow: 0 0 0 2px rgba(36, 36, 36, 0.1);
     background: var(--color-surface);
 }
 
 .form-input::placeholder,
 .form-textarea::placeholder {
     color: var(--color-text-muted);
-    opacity: 0.55;
+    opacity: 0.6;
 }
 
 .form-textarea {
@@ -642,7 +658,7 @@ body {
 .checkbox-label input[type="checkbox"] {
     width: 16px;
     height: 16px;
-    accent-color: var(--color-primary);
+    accent-color: var(--color-action);
     cursor: pointer;
 }
 
@@ -676,9 +692,9 @@ body {
 }
 
 .feedback-loading {
-    color: var(--color-primary);
-    background: var(--color-primary-light);
-    border-color: rgba(79, 70, 229, 0.25) !important;
+    color: var(--color-text-muted);
+    background: var(--color-bg);
+    border-color: var(--color-border) !important;
     animation: pulse 1.4s ease-in-out infinite;
 }
 
