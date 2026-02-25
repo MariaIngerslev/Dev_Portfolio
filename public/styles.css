@@ -218,6 +218,49 @@ body {
     }
 }
 
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+}
+
+.nav-link {
+    font-family: var(--font-sans);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    color: var(--color-text);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.nav-link:hover {
+    color: var(--color-text-muted);
+}
+
+/* Hide text nav links on small screens; show only the pill button */
+.nav-link:not(.nav-link--contact) {
+    display: none;
+}
+
+@media (min-width: 540px) {
+    .nav-link:not(.nav-link--contact) {
+        display: inline;
+    }
+}
+
+.nav-link--contact {
+    background: #1a1a1a;
+    color: #ffffff;
+    border-radius: 50px;
+    padding: 8px 16px;
+    transition: background var(--transition), color var(--transition);
+}
+
+.nav-link--contact:hover {
+    background: var(--color-action-hover);
+    color: #ffffff;
+}
+
 
 /* ----- 6. Main Content Area ----- */
 .main-content {
