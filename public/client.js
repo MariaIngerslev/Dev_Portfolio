@@ -227,7 +227,7 @@ function createBlogCard(post) {
 function createHeroSection() {
     const section = el('div', 'hero');
 
-    const heading = el('h1', 'hero-title', 'Idéer, kode og historier.');
+    const heading = el('h1', 'hero-title', 'Idéer, kode & historier');
     const subheadline = el('p', 'hero-subtitle', 'En blog om kode, projekter og nysgerrighed.');
 
     const ctaButton = el('button', 'btn btn-primary hero-cta', 'Find readings');

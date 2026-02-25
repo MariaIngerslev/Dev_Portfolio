@@ -297,13 +297,12 @@ body {
     min-height: 70vh;
     padding: var(--space-2xl) var(--space-lg);
     margin-bottom: var(--space-2xl);
-    background: #fafaf9;
-    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg);
 }
 
 .hero-title {
     font-family: var(--font-serif);
-    font-size: 3.75rem;
+    font-size: 5rem;
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1.1;
@@ -335,7 +334,7 @@ body {
 
 @media (max-width: 600px) {
     .hero-title {
-        font-size: 2.375rem;
+        font-size: 3.125rem;
     }
 
     .hero-subtitle {
