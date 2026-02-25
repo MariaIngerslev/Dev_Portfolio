@@ -935,6 +935,12 @@ a.contact-value:hover {
     display: flex;
     flex-direction: column;
     gap: var(--space-xl);
+    background-color: #d0c8c0;
+    padding: var(--space-lg);
+}
+
+.cv-sidebar .cv-section-title {
+    color: var(--color-text);
 }
 
 .cv-main {
