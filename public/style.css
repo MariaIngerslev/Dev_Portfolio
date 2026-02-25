@@ -141,6 +141,83 @@ body {
     }
 }
 
+.header-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.nav-link {
+    text-decoration: none;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    white-space: nowrap;
+    transition: color var(--transition);
+}
+
+.nav-link:hover {
+    color: var(--color-text);
+}
+
+.nav-link--contact {
+    color: #ffffff;
+    background: var(--color-primary);
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    transition: background var(--transition);
+}
+
+.nav-link--contact:hover {
+    color: #ffffff;
+    background: var(--color-primary-hover);
+}
+
+/* Hamburger button — hidden on desktop */
+.nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: background var(--transition);
+}
+
+.nav-hamburger:hover {
+    background: var(--color-bg);
+}
+
+.nav-hamburger span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--color-text);
+    border-radius: 2px;
+    transition: transform var(--transition), opacity var(--transition);
+    transform-origin: center;
+}
+
+/* Hamburger → X animation when open */
+.nav-hamburger[aria-expanded="true"] span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+.nav-hamburger[aria-expanded="true"] span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.nav-hamburger[aria-expanded="true"] span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+}
+
 
 /* ----- 4. Main Content Area ----- */
 .main-content {
@@ -530,6 +607,48 @@ body {
 
 
 /* ----- 12. Responsive (Mobile-First) ----- */
+
+/* Mobile nav: show hamburger, hide inline links */
+@media (max-width: 768px) {
+    .nav-hamburger {
+        display: flex;
+    }
+
+    .header-nav {
+        display: none;
+        position: fixed;
+        top: var(--header-height);
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        gap: 0;
+        background: var(--color-surface);
+        border-bottom: 1px solid var(--color-border);
+        box-shadow: var(--shadow-md);
+        padding: var(--space-sm) var(--space-lg) var(--space-md);
+        z-index: 99;
+    }
+
+    .header-nav.is-open {
+        display: flex;
+    }
+
+    .header-nav .nav-link {
+        padding: var(--space-sm) 0;
+        font-size: var(--font-size-base);
+        border-bottom: 1px solid var(--color-border);
+        color: var(--color-text-muted);
+    }
+
+    .header-nav .nav-link--contact {
+        align-self: flex-start;
+        padding: 0.5rem 1.1rem;
+        margin-top: var(--space-sm);
+        border-bottom: none;
+        color: #ffffff;
+    }
+}
+
 @media (max-width: 600px) {
     :root {
         --font-size-2xl: 1.5rem;

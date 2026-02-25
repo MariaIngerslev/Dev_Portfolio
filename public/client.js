@@ -29,6 +29,7 @@ function matchRoute(pathname) {
 }
 
 function navigateTo(url, pushState = true) {
+    closeMobileMenu();
     if (pushState) {
         window.history.pushState(null, '', url);
         window.scrollTo(0, 0);
@@ -58,6 +59,8 @@ window.addEventListener('popstate', () => {
 
 // --- DOM References ---
 
+const navHamburger = document.querySelector('.nav-hamburger');
+const headerNav = document.querySelector('.header-nav');
 const viewHome = document.getElementById('view-home');
 const viewBlogposts = document.getElementById('view-blogposts');
 const viewPost = document.getElementById('view-post');
@@ -71,6 +74,33 @@ const commentForm = document.getElementById('comment-form');
 const feedbackMessage = document.getElementById('feedback-message');
 
 let currentPostId = null;
+
+// --- Mobile Navigation ---
+
+function closeMobileMenu() {
+    if (!headerNav || !navHamburger) return;
+    headerNav.classList.remove('is-open');
+    navHamburger.setAttribute('aria-expanded', 'false');
+}
+
+function toggleMobileMenu() {
+    const isOpen = headerNav.classList.toggle('is-open');
+    navHamburger.setAttribute('aria-expanded', String(isOpen));
+}
+
+if (navHamburger) {
+    navHamburger.addEventListener('click', toggleMobileMenu);
+}
+
+if (headerNav) {
+    headerNav.addEventListener('click', (event) => {
+        if (event.target.closest('.nav-link')) {
+            closeMobileMenu();
+        }
+    });
+}
+
+window.addEventListener('popstate', closeMobileMenu);
 
 // --- Shared Helpers ---
 
