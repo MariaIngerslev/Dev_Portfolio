@@ -28,6 +28,7 @@ function matchRoute(pathname) {
 function navigateTo(url, pushState = true) {
     if (pushState) {
         window.history.pushState(null, '', url);
+        window.scrollTo(0, 0);
     }
     const matched = matchRoute(window.location.pathname);
     if (matched) {
@@ -246,14 +247,27 @@ function renderCommentList(comments) {
 
 // --- Page Renderers ---
 
+function createLoadingIndicator(message) {
+    const wrapper = el('div', 'loading-indicator');
+    wrapper.append(
+        el('span', 'loading-spinner'),
+        el('span', 'loading-text', message)
+    );
+    return wrapper;
+}
+
 async function renderHome() {
     showView('home');
     currentPostId = null;
+
+    blogList.textContent = '';
+    blogList.appendChild(createLoadingIndicator('Henter indlæg...'));
 
     try {
         const posts = await fetchAllPosts();
         renderPostList(posts);
     } catch (error) {
+        blogList.textContent = '';
         console.error('Error loading posts:', error);
     }
 }
@@ -262,6 +276,9 @@ async function renderPost(params) {
     showView('post');
     currentPostId = params.id;
     setFeedback('', null);
+
+    fullPostContent.textContent = '';
+    fullPostContent.appendChild(createLoadingIndicator('Henter indlæg...'));
 
     try {
         const post = await fetchPostById(params.id);
@@ -272,11 +289,32 @@ async function renderPost(params) {
 
         renderPostContent(post);
 
+        commentsList.textContent = '';
+        commentsList.appendChild(createLoadingIndicator('Henter kommentarer...'));
+
         const comments = await fetchCommentsByPostId(params.id);
         renderCommentList(comments);
     } catch (error) {
+        fullPostContent.textContent = 'Fejl ved indlæsning af indlæg.';
         console.error('Error loading post:', error);
     }
+}
+
+// --- Comment Form Helpers ---
+
+function setSubmitButtonBusy(button, busy) {
+    button.disabled = busy;
+    button.textContent = busy ? 'Validerer...' : 'Publicer';
+}
+
+function showFormError(message) {
+    const errorsEl = commentForm.querySelector('.form-errors');
+    errorsEl.textContent = '';
+    errorsEl.appendChild(el('p', null, message));
+}
+
+function clearFormError() {
+    commentForm.querySelector('.form-errors').textContent = '';
 }
 
 // --- Comment Form Handling ---
@@ -285,54 +323,63 @@ async function handleCommentSubmit(event) {
     event.preventDefault();
 
     if (!currentPostId) {
-        setFeedback('Fejl: Intet indlæg valgt.', 'error');
+        showFormError('Fejl: Intet indlæg valgt.');
         return;
     }
 
-    const authorName = document.getElementById('comment-author').value;
-    const commentText = document.getElementById('comment-text').value;
-    const email = document.getElementById('comment-email').value;
+    const authorName = document.getElementById('comment-author').value.trim();
+    const commentText = document.getElementById('comment-text').value.trim();
+    const email = document.getElementById('comment-email').value.trim();
     const subscribe = document.getElementById('comment-subscribe').checked;
+
+    const submitButton = commentForm.querySelector('.btn-primary');
+    clearFormError();
+    setFeedback('', null);
+    setSubmitButtonBusy(submitButton, true);
 
     const urls = extractUrls(commentText);
     if (urls.length > 0) {
-        setFeedback('Tjekker URL-sikkerhed...', 'loading');
         try {
             const { results } = await checkUrlSafety(urls);
             const unsafeUrls = results.filter((entry) => !entry.safe);
             if (unsafeUrls.length > 0) {
-                const unsafeUrlNames = unsafeUrls.map((entry) => entry.url).join(', ');
-                setFeedback(`Usikre links fundet: ${unsafeUrlNames}`, 'error');
+                showFormError('Vi kunne desværre ikke godkende dit link af sikkerhedsmæssige årsager. Prøv venligst at fjerne det.');
+                setSubmitButtonBusy(submitButton, false);
                 return;
             }
-            setFeedback('URLs godkendt! Publicerer...', 'success');
         } catch (error) {
-            setFeedback('Fejl ved URL-tjek. Prøv igen.', 'error');
+            showFormError('Fejl ved URL-tjek. Prøv igen.');
+            setSubmitButtonBusy(submitButton, false);
             return;
         }
     }
 
-    setFeedback('Publicerer din kommentar...', 'loading');
-
     try {
         const { ok, body: createdComment } = await submitComment({
             postId: currentPostId,
-            name: authorName,
+            name: authorName || undefined,
             text: commentText,
-            email,
+            email: email || undefined,
             subscribe
         });
 
         if (!ok) {
-            setFeedback(createdComment.error || 'Noget gik galt. Prøv igen.', 'error');
+            showFormError(createdComment.error || 'Noget gik galt. Prøv igen.');
+            setSubmitButtonBusy(submitButton, false);
             return;
         }
 
         setFeedback('Din kommentar er publiceret!', 'success');
-        commentsList.prepend(renderCommentCard(createdComment));
+        clearFormError();
         commentForm.reset();
+        setSubmitButtonBusy(submitButton, false);
+
+        const newCard = renderCommentCard(createdComment);
+        newCard.classList.add('fade-in');
+        commentsList.prepend(newCard);
     } catch (error) {
-        setFeedback('Fejl: Kunne ikke kontakte serveren. Prøv igen senere.', 'error');
+        showFormError('Fejl: Kunne ikke kontakte serveren. Prøv igen senere.');
+        setSubmitButtonBusy(submitButton, false);
         console.error('Comment submission error:', error);
     }
 }
