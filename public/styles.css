@@ -314,12 +314,12 @@ body {
 
 .hero-title {
     font-family: var(--font-serif);
-    font-size: 5rem;
+    font-size: 7.5rem;
     font-weight: 700;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
+    letter-spacing: -0.04em;
+    line-height: 1.05;
     color: var(--color-text);
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-xl);
 }
 
 .hero-subtitle {
@@ -329,13 +329,13 @@ body {
     margin-bottom: var(--space-xl);
 }
 
-/* Identical to .nav-link--contact pill, but slightly larger */
+/* Identical to .nav-link--contact pill, but significantly larger */
 .hero-cta {
     background: #1a1a1a;
     color: #ffffff;
     border-radius: var(--radius-pill);
-    font-size: var(--font-size-base);
-    padding: 0.75rem 1.75rem;
+    font-size: 1.0625rem;
+    padding: 1rem 2.5rem;
     transition: background var(--transition), color var(--transition);
 }
 
@@ -346,7 +346,7 @@ body {
 
 @media (max-width: 600px) {
     .hero-title {
-        font-size: 3.125rem;
+        font-size: 3.75rem;
     }
 
     .hero-subtitle {
