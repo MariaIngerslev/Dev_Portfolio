@@ -7,7 +7,7 @@
 /* ----- 1. CSS Variables (Design Tokens) ----- */
 :root {
     /* Colors — warm parchment palette, minimal accent */
-    --color-bg:            #f2f0eb;      /* warm cream base */
+    --color-bg:            #e8e1d4;      /* warm cream base */
     --color-surface:       #ffffff;
     --color-white:         #ffffff;      /* explicit white for button/nav text */
     --color-text:          #242424;      /* near-black, not pure black */
@@ -36,7 +36,7 @@
     --color-error-bg:      #fef2f2;
     --color-error-border:  #f5c6c6;
 
-    --color-header-bg:     rgba(242, 240, 235, 0.92); /* frosted sticky header */
+    --color-header-bg:     rgba(232, 225, 212, 0.92); /* frosted sticky header */
     --color-sidebar-bg:    #d0c8c0;                   /* CV sidebar tint */
 
     /* Typography — editorial serif for content, grotesque for UI */
