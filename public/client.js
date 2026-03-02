@@ -281,7 +281,7 @@ function createHeroSection() {
 
     const textCol = el('div', 'hero-text');
     const heading = el('h1', 'hero-title', 'Idéer, kode & projekter');
-    const subheadline = el('p', 'hero-subtitle', 'En blog med rod i solidt fullstack håndværk, nørderi og nysgerrighed.');
+    const subheadline = el('p', 'hero-subtitle', 'En blog med rod i solidt fullstack håndværk og nysgerrighed.');
     const ctaButton = el('button', 'btn hero-cta', 'Læs indlæg');
     ctaButton.addEventListener('click', () => {
         navigateTo('/blogposts');
