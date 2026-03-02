@@ -196,9 +196,9 @@ body {
 
 /* Serif logo — editorial masthead feel */
 .site-logo h1 {
-    font-family: var(--font-serif);
+    font-family: "GT Super", Georgia, Cambria, "Times New Roman", Times, serif;
     font-size: var(--font-size-xl);
-    font-weight: 700;
+    font-weight: 500;
     color: var(--color-text);
     letter-spacing: -0.02em;
     margin: 0;
@@ -303,54 +303,63 @@ body {
 .hero {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
-    text-align: center;
     min-height: 70vh;
     padding: var(--space-2xl) var(--space-lg);
     margin-bottom: var(--space-2xl);
     background: var(--color-bg);
 }
 
+.hero-content {
+    max-width: 700px;
+    width: 100%;
+}
+
 .hero-title {
-    font-family: var(--font-serif);
-    font-size: 7.5rem;
-    font-weight: 700;
-    letter-spacing: -0.04em;
+    font-family: "GT Super", Georgia, Cambria, "Times New Roman", Times, serif;
+    font-size: clamp(4rem, 8vw, 6.5rem);
+    font-weight: 400;
+    letter-spacing: -0.03em;
     line-height: 1.05;
-    color: var(--color-text);
+    color: #191919;
     margin-bottom: var(--space-xl);
 }
 
 .hero-subtitle {
-    font-family: var(--font-sans);
-    font-size: var(--font-size-lg);
-    color: var(--color-text-muted);
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.5rem;
+    line-height: 1.4;
+    color: #242424;
+    margin-top: 20px;
     margin-bottom: var(--space-xl);
 }
 
-/* Identical to .nav-link--contact pill, but significantly larger */
+/* Medium-style pill CTA */
 .hero-cta {
-    background: #1a1a1a;
+    font-family: sohne, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 1.1rem;
+    font-weight: 400;
+    background: #191919;
     color: #ffffff;
-    border-radius: var(--radius-pill);
-    font-size: 1.0625rem;
-    padding: 1rem 2.5rem;
-    transition: background var(--transition), color var(--transition);
+    border: none;
+    border-radius: 9999px;
+    padding: 16px 32px;
+    transition: opacity var(--transition);
 }
 
 .hero-cta:hover {
-    background: var(--color-action-hover);
+    opacity: 0.8;
     color: #ffffff;
 }
 
 @media (max-width: 600px) {
     .hero-title {
-        font-size: 3.75rem;
+        font-size: clamp(2.5rem, 10vw, 4rem);
     }
 
     .hero-subtitle {
-        font-size: var(--font-size-base);
+        font-size: 1.2rem;
     }
 }
 
