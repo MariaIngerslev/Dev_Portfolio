@@ -1,5 +1,6 @@
 const RALPH_LOOP_POST = {
-    title: "Sådan tæmmede jeg AI'en: The Ralph Loop",
+    title:     "Sådan tæmmede jeg AI'en: The Ralph Loop",
+    heroImage: '/images/blog/ralph_loop.jpg',
     content: `<img src="/images/blog/ralph_loop.jpg" alt="The Ralph Loop" />
 
 <h2>1. Krogen: Når AI'en mister den røde tråd</h2>

@@ -1,5 +1,6 @@
 const SEED_POST = {
-    title: 'Fra Idé til Kode: Sådan byggede jeg min egen sikre Blog App',
+    title:     'Fra Idé til Kode: Sådan byggede jeg min egen sikre Blog App',
+    heroImage: '/images/blog/first_blog.png',
     content: `<img src="/images/blog/first_blog.png" alt="Fra Idé til Kode: Sådan byggede jeg min egen sikre Blog App" />
 
 <h2>1. Baggrunden: Mit allerførste kodeprojekt</h2>

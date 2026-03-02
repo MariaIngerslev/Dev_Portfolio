@@ -242,25 +242,37 @@ function extractExcerpt(html) {
 function createBlogCard(post) {
     const article = el('article', 'blog-card');
 
-    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-    const isNew = new Date(post.createdAt) > sevenDaysAgo;
+    if (post.heroImage) {
+        const imageContainer = el('div', 'card-image');
+        const thumbnail = el('img');
+        thumbnail.src = post.heroImage;
+        thumbnail.alt = post.title;
+        imageContainer.appendChild(thumbnail);
+        article.appendChild(imageContainer);
+    }
 
     const cardBody = el('div', 'card-body');
-    if (isNew) {
-        cardBody.appendChild(el('span', 'card-tag', 'Ny'));
-    }
-    cardBody.append(
-        el('h2', 'card-title', post.title),
-        el('time', 'card-date', formatDate(post.createdAt)),
-        el('p', 'card-excerpt', extractExcerpt(post.content))
-    );
 
-    const cardFooter = el('div', 'card-footer');
-    const link = el('a', 'read-more-btn', 'Læs mere →');
-    link.href = `/posts/${post._id}`;
-    cardFooter.appendChild(link);
+    cardBody.appendChild(el('time', 'card-date', formatDate(post.createdAt)));
 
-    article.append(cardBody, cardFooter);
+    const titleRow = el('div', 'card-title-row');
+    const titleLink = el('a', 'card-title-link', post.title);
+    titleLink.href = `/posts/${post._id}`;
+    const titleEl = el('h2', 'card-title');
+    titleEl.appendChild(titleLink);
+    const arrow = el('span', 'card-arrow', '↗');
+    titleRow.append(titleEl, arrow);
+    cardBody.appendChild(titleRow);
+
+    cardBody.appendChild(el('p', 'card-excerpt', extractExcerpt(post.content)));
+
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const isNew = new Date(post.createdAt) > sevenDaysAgo;
+    const tagsRow = el('div', 'card-tags');
+    if (isNew) tagsRow.appendChild(el('span', 'card-tag', 'Ny'));
+    cardBody.appendChild(tagsRow);
+
+    article.appendChild(cardBody);
     return article;
 }
 
