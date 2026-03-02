@@ -391,7 +391,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: var(--space-2xl) 0;
+    padding: var(--space-2xl) 0 var(--space-2xl) var(--space-lg);
 }
 
 .hero-title {
