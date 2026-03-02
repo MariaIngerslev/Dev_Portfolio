@@ -4,6 +4,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const Post = require('./models/Post');
 const SEED_POST = require('./data/seed');
+const RALPH_LOOP_POST = require('./data/ralph-loop-post');
 const apiRoutes = require('./routes/api');
 const postsRoutes = require('./routes/posts');
 const commentsRoutes = require('./routes/comments');
@@ -18,6 +19,7 @@ async function seedPosts() {
         await Post.create(SEED_POST);
         console.log('Seeded initial blog post');
     }
+    await Post.findOneAndUpdate({ title: RALPH_LOOP_POST.title }, RALPH_LOOP_POST, { upsert: true });
 }
 
 // Middleware

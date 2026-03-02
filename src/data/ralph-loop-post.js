@@ -1,14 +1,14 @@
 const RALPH_LOOP_POST = {
     title: "Sådan tæmmede jeg AI'en: The Ralph Loop",
-    content: `<h2>1. Krogen: Når AI'en mister den røde tråd</h2>
+    content: `<img src="/images/blog/ralph_loop.jpg" alt="The Ralph Loop" />
+
+<h2>1. Krogen: Når AI'en mister den røde tråd</h2>
 
 <p>Jeg er i øjeblikket ved at bygge en sikker blog fra bunden ved hjælp af Vanilla JS på frontend-siden og Express (Node.js) på backend-siden. For nylig begyndte jeg at eksperimentere med AI-værktøjer (som Claude Code) til at hjælpe med at "vibecode" – altså at frembringe hurtige iterationer af mit UX/UI.</p>
 
 <p>I starten var det magisk. Men jeg stødte hurtigt på et kritisk problem: Når chat-historikken blev for lang, begyndte AI'en at opføre sig som en træt udvikler kl. 02:00 om natten efter en fredagsbar på studiet. Den blev forvirret, glemte alt om mine arkitekturkrav (som DRY-princippet og Separation of Concerns), og begyndte at introducere regulær spaghettikode. Den overskrev endda min opsætning for at validere data på serveren! Jeg havde brug for en måde at styre dyret på.</p>
 
 <h2>2. Konceptet: Hvad er The Ralph Loop?</h2>
-
-<img src="/images/blog/ralph_loop.png" alt="The Ralph Loop" />
 
 <p>Løsningen blev et koncept, jeg kalder <strong>The Ralph Loop</strong>. I bund og grund er det et <em>stateless agent loop</em>.</p>
 
