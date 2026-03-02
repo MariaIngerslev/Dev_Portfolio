@@ -1124,6 +1124,11 @@ body {
 
 
 /* ----- 14a. Contact View ----- */
+#view-contact {
+    margin-left:  calc(-1 * var(--space-lg));
+    margin-right: calc(-1 * var(--space-lg));
+}
+
 .page-container {
     max-width: var(--max-width);
     margin: var(--space-2xl) auto 0;
@@ -1141,11 +1146,13 @@ body {
 .contact-layout {
     display: flex;
     align-items: stretch;
-    min-height: calc(100vh - var(--header-height));
+    max-width: var(--max-width-wide);
+    margin: var(--space-2xl) auto 0;
+    padding: 0 var(--space-xl);
 }
 
 .contact-content {
-    flex: 0 0 50%;
+    flex: 1;
     padding: var(--space-2xl) var(--space-xl);
     max-width: 560px;
 }
@@ -1188,7 +1195,8 @@ body {
 
 /* Warm-tinted placeholder panel — TODO: replace background-color with an image */
 .contact-image-panel {
-    flex: 0 0 50%;
+    flex: 0 0 40%;
+    max-height: 500px;
     background-color: var(--color-sidebar-bg);
 }
 
