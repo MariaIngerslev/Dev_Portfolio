@@ -14,12 +14,8 @@ const PORT = 3000;
 const PUBLIC_DIR = path.join(__dirname, '../public');
 
 async function seedPosts() {
-    const count = await Post.countDocuments();
-    if (count === 0) {
-        await Post.create(SEED_POST);
-        console.log('Seeded initial blog post');
-    }
-    await Post.findOneAndUpdate({ title: RALPH_LOOP_POST.title }, RALPH_LOOP_POST, { upsert: true });
+    await Post.findOneAndUpdate({ title: SEED_POST.title }, SEED_POST, { upsert: true, new: true });
+    await Post.findOneAndUpdate({ title: RALPH_LOOP_POST.title }, RALPH_LOOP_POST, { upsert: true, new: true });
 }
 
 // Middleware
