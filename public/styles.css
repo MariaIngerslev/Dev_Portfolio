@@ -1188,7 +1188,7 @@ body {
 
 /* Warm-tinted placeholder panel — TODO: replace background-color with an image */
 .contact-image-panel {
-    flex: 1;
+    flex: 0 0 50%;
     background-color: var(--color-sidebar-bg);
 }
 
