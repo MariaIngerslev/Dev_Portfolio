@@ -121,7 +121,7 @@ const el = (tag, className, textContent) => {
 };
 
 const ALLOWED_TAGS = new Set(['P', 'H1', 'H2', 'H3', 'H4', 'H5', 'H6',
-    'UL', 'OL', 'LI', 'STRONG', 'EM', 'CODE', 'PRE', 'BR', 'A', 'BLOCKQUOTE']);
+    'UL', 'OL', 'LI', 'STRONG', 'EM', 'CODE', 'PRE', 'BR', 'A', 'BLOCKQUOTE', 'IMG']);
 
 function sanitizeHtml(html) {
     const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -136,6 +136,11 @@ function sanitizeHtml(html) {
                 if (child.tagName === 'A' && child.hasAttribute('href')) {
                     const href = child.getAttribute('href');
                     if (/^https?:\/\//.test(href)) safeElement.setAttribute('href', href);
+                }
+                if (child.tagName === 'IMG') {
+                    const src = child.getAttribute('src') || '';
+                    if (/^(\/|https:\/\/)/.test(src)) safeElement.setAttribute('src', src);
+                    if (child.hasAttribute('alt')) safeElement.setAttribute('alt', child.getAttribute('alt'));
                 }
                 walkNodes(child, safeElement);
                 targetParent.appendChild(safeElement);
