@@ -237,9 +237,14 @@ function extractExcerpt(html) {
 function createBlogCard(post) {
     const article = el('article', 'blog-card');
 
+    const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const isNew = new Date(post.createdAt) > sevenDaysAgo;
+
     const cardBody = el('div', 'card-body');
+    if (isNew) {
+        cardBody.appendChild(el('span', 'card-tag', 'Ny'));
+    }
     cardBody.append(
-        el('span', 'card-tag', 'Ny'),
         el('h2', 'card-title', post.title),
         el('time', 'card-date', formatDate(post.createdAt)),
         el('p', 'card-excerpt', extractExcerpt(post.content))
