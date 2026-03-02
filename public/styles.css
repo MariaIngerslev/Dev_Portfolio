@@ -1073,12 +1073,47 @@ body {
 
 /* ----- 13. Footer ----- */
 .site-footer {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     padding: var(--space-xl) var(--space-lg);
     font-size: var(--font-size-sm);
     color: var(--color-text-muted);
     border-top: 1px solid var(--color-border);
     margin-top: auto;
+    gap: var(--space-lg);
+}
+
+.footer-title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.footer-tagline {
+    color: var(--color-text-muted);
+}
+
+.footer-columns {
+    display: flex;
+    gap: var(--space-xl);
+}
+
+.footer-col-heading {
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.footer-col a {
+    color: var(--color-text-muted);
+    text-decoration: none;
+}
+
+.footer-col a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
 }
 
 
