@@ -93,7 +93,7 @@
 
 
 /* ----- 1b. Dark Mode Token Overrides ----- */
-[data-theme="dark"] :root {
+:root[data-theme="dark"] {
     --color-bg:            #1c1a17;
     --color-surface:       #252220;
     --color-text:          #e8e0d4;
@@ -111,6 +111,13 @@
     --color-error-bg:      #2a1010;
     --color-error-border:  #6b1a1a;
     --color-forest-green-hover: rgba(45, 79, 30, 0.18);
+    --color-action:        #e8e0d4;
+    --color-action-hover:  #d0c8c0;
+    --color-action-active: #c0b8b0;
+    --color-primary:       #4cae4a;
+    --color-primary-hover: #6dc96b;
+    --color-cta-dark:       #2d5a38;
+    --color-cta-dark-hover: #3a7048;
 }
 
 
