@@ -4,45 +4,50 @@ TODO_FILE="TODO.md"
 
 echo "🚀 Starter The Ralph Loop..."
 
-# Uendelig loop, der kører indtil TODO.md er tom
 while true; do
-  # 1. READ CONTEXT: Læs den øverste linje fra TODO.md
-  TASK=$(head -n 1 "$TODO_FILE")
-  
-  # Hvis filen er tom, afsluttes loopet
-  if [ -z "$TASK" ]; then
-    echo "🎉 Ingen flere opgaver i $TODO_FILE. Ralph er færdig!"
-    break
-  fi
+    # 1. READ CONTEXT: Læs alt indtil den første '---' separator
+    # Vi bruger awk til at snappe den første blok
+    TASK=$(awk '/---/{exit} {print}' "$TODO_FILE")
 
-  echo "---------------------------------------------------"
-  echo "👉 Næste opgave: $TASK"
-  echo "---------------------------------------------------"
+    # Hvis TASK er tom (pga. tom fil), så stop
+    if [[ -z "${TASK//[[:space:]]/}" ]]; then
+        echo "🎉 Ingen flere opgaver i $TODO_FILE. Ralph er færdig!"
+        break
+    fi
 
-  # 2. EXECUTE TASK: Start Claude med -y flaget.
-  # -y sørger for, at Claude accepterer ændringer automatisk og afslutter sessionen bagefter.
-  claude -y "Udfør følgende opgave: '$TASK'. Brug CLAUDE.md som overordnet guide. Ret kun de filer, der er nødvendige for opgaven."
+    echo "---------------------------------------------------"
+    echo "👉 Næste del-opgave:"
+    echo "$TASK"
+    echo "---------------------------------------------------"
 
-  # 3. RUN TESTS: Kør dine Jest-tests fra npm
-  echo "🧪 Kører tests for at validere ændringerne..."
-  npm test
-  TEST_RESULT=$?
+    # 2. EXECUTE TASK: One-shot mode med /dev/null fix
+    claude -y "Udfør følgende del-opgave: $TASK. Brug CLAUDE.md som guide." < /dev/null
 
-  # Tjek om testene fejlede
-  if [ $TEST_RESULT -ne 0 ]; then
-    echo "❌ Tests fejlede! Ralph stopper loopet, så du kan inspicere fejlen manuelt."
-    exit 1
-  fi
+    # 3. RUN TESTS
+    echo "🧪 Kører tests..."
+    npm test
+    TEST_RESULT=$?
 
-  # 4. GIT COMMIT & PUSH: Gem ændringerne og send dem til GitHub/Render
-  echo "✅ Tests bestået. Committer og pusher ændringer..."
-  git add .
-  git commit -m "Ralph Loop: $TASK"
-  git push
+    if [ $TEST_RESULT -ne 0 ]; then
+        echo "❌ Tests fejlede! Ralph stopper."
+        exit 1
+    fi
 
-  # 5. STATE UPDATE: Fjern den fuldførte opgave fra TODO.md
-  tail -n +2 "$TODO_FILE" > "$TODO_FILE.tmp" && mv "$TODO_FILE.tmp" "$TODO_FILE"
+    # 4. GIT COMMIT & PUSH
+    echo "✅ Committer ændringer..."
+    git add .
+    git commit -m "Ralph Loop: Fuldført del-opgave"
+    git push
 
-  echo "🔄 Opgave fuldført og pushed. Gør klar til næste iteration..."
-  sleep 2 
+    # 5. STATE UPDATE: Fjern den udførte blok (alt indtil første ---)
+    # Hvis der er en '---', sletter vi alt til og med den. 
+    # Hvis ikke, tømmer vi bare filen.
+    if grep -q "---" "$TODO_FILE"; then
+        sed -i '1,/---/d' "$TODO_FILE"
+    else
+        > "$TODO_FILE"
+    fi
+
+    echo "🔄 Blok fuldført. Venter 2 sekunder på næste blok..."
+    sleep 2
 done
