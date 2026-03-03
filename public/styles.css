@@ -1680,7 +1680,7 @@ body {
 
     .skill-deep-dive {
         grid-template-columns: 1fr 460px;
-        align-items: start;
+        align-items: center;
     }
 
     .skill-peek {
