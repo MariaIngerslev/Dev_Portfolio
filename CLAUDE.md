@@ -16,24 +16,30 @@ This is a Danish-language blog app with comment URL validation, built as an Expr
 **Backend — Composition Root** (`src/main.js`): The application's Composition Root. Its sole responsibility is wiring: serving static files from `public/`, parsing JSON bodies, connecting to MongoDB via Mongoose, seeding initial data, and mounting route modules. No business logic, route handlers, or domain decisions should live here — all API logic belongs in `src/routes/`.
 
 **Mongoose models** (`src/models/`):
-- `Post.js` — Schema: `title` (String, required), `content` (String, required), `createdAt` (Date, default now).
+- `Post.js` — Schema: `title` (String, required), `content` (String, required), `heroImage` (String, optional), `createdAt` (Date, default now).
 - `Comment.js` — Schema: `name` (String, default: 'Anonym'), `content` (String, required), `postId` (ObjectId, ref: 'Post', required, indexed), `createdAt` (Date, default now).
+- `Message.js` — Schema: `firstName` (String, required), `lastName` (String, required), `email` (String, required), `message` (String, required), `createdAt` (Date, default now).
 
 **Shared utilities and middleware** (`src/utils/`, `src/middleware/`, `src/data/`):
 - `utils/extractUrls.js` — Shared URL extraction via a strict, non-greedy regex that avoids capturing HTML attributes and terminal punctuation. Used by both server-side routes and the client. **The URL regex in `public/client.js` MUST be kept perfectly synchronised with `src/utils/extractUrls.js` at all times** — any divergence will cause validation mismatches between the frontend and backend.
 - `middleware/validateObjectId.js` — Reusable Express middleware for MongoDB ObjectId param validation.
 - `data/seed.js` — Initial blog post seed content, separated from entry point.
+- `data/ralph-loop-post.js` — Second blog post seed ("The Ralph Loop"). Both seed files are loaded in `main.js` via `findOneAndUpdate` with `upsert: true`.
 
 **Route modules** (`src/routes/`):
 - `api.js` — `POST /api/validate-urls`: delegates to the validator module, returns `{ allSafe, results }` where each result has `{ url, safe, reason }`.
 - `posts.js` — `GET /api/posts`, `GET /api/posts/latest`, `GET /api/posts/:id`, `POST /api/posts`: blog post CRUD using the Post model. Uses `validateObjectId` middleware.
 - `comments.js` — `POST /api/comments`, `GET /api/comments/:postId`: comments with URL safety checking, ObjectId validation via middleware, and post-existence validation (404 if post not found). Uses shared `extractUrls` utility.
+- `messages.js` — `POST /api/messages`: contact form submissions. All four fields (`firstName`, `lastName`, `email`, `message`) are required non-empty strings; validates with strict type checking before persisting via the Message model.
 
-**Frontend** (`public/`): Single-page app with History API-based client-side router (no framework). Two views toggled via `display: none/block`:
-- `view-home` (`/`): Blog post list
+**Frontend** (`public/`): Single-page app with History API-based client-side router (no framework). Five views toggled via `display: none/block`:
+- `view-home` (`/`): Landing page with hero section and latest post
+- `view-blogposts` (`/blogposts`): Full blog post list
 - `view-post` (`/posts/:id`): Full post with comments and comment form
+- `view-contact` (`/contact`): Contact form page
+- `view-cv` (`/cv`): CV / "Om mig" page
 
-**`public/client.js`**: Implements a custom SPA router using `pushState`/`popstate` with pre-compiled route patterns. Global click delegation intercepts internal `<a>` tags. Uses DocumentFragment for batch DOM updates. Shared helpers: `el()` for DOM element creation, `formatDate()` for Danish locale dates, `extractExcerpt()` for post previews, `createBlogCard()` for home view cards. Handles comment form submission with `postId` from the current route, URL extraction via regex (`extractUrls`), and client-side URL safety checking via `POST /api/validate-urls`. A server-side catch-all route in `main.js` serves `index.html` for all non-API paths to support direct URL access and page refresh.
+**`public/client.js`**: Implements a custom SPA router using `pushState`/`popstate` with pre-compiled route patterns. Global click delegation intercepts internal `<a>` tags and calls `closeMobileMenu()` on every navigation. Uses DocumentFragment for batch DOM updates. Shared helpers: `el()` for DOM element creation, `formatDate()` for Danish locale dates, `extractExcerpt()` for post previews, `createBlogCard()` for home view cards, and `sanitizeHtml()` for safe rendering of trusted blog HTML content. `sanitizeHtml()` uses `DOMParser` and a whitelist of allowed tags (`P`, `H1`–`H6`, `UL`, `OL`, `LI`, `STRONG`, `EM`, `CODE`, `PRE`, `BR`, `A`, `BLOCKQUOTE`, `IMG`) — only `https?://` hrefs and `/`- or `https://`-prefixed `src` attributes are forwarded. Handles comment form submission with `postId` from the current route, URL extraction via regex (`extractUrls`), and client-side URL safety checking via `POST /api/validate-urls`. Mobile navigation is implemented with a hamburger button (`.nav-hamburger`) that toggles `.is-open` on `.header-nav` and manages `aria-expanded`. A server-side catch-all route in `main.js` serves `index.html` for all non-API paths to support direct URL access and page refresh.
 
 **Separation of Concerns in `client.js`:** Although all client code resides in a single file, maintain a strict logical separation between **Data Access** (all `fetch` calls and response handling) and **DOM Manipulation** (element creation, rendering, event binding). Keep data-fetching functions pure of DOM side-effects, and keep rendering functions free of network calls. This makes the code easier to reason about, test, and refactor.
 
