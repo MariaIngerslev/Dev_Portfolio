@@ -422,35 +422,38 @@ body {
     margin-bottom: var(--space-xl);
 }
 
-/* Medium-style pill CTA — primary blog-first action */
-.hero-cta {
+/* Primary hero CTA — compound selector beats .btn cascade for font/padding overrides */
+.btn.hero-cta {
     align-self: flex-start;
-    font-family: var(--font-sans);
-    font-size: 5rem;
-    font-weight: 400;
-    background: var(--color-action);
+    font-size: var(--font-size-lg);   /* 18px — prominent without overwhelming the headline */
+    font-weight: 700;
+    background: var(--color-primary); /* #1a8917 — same green as "Idéer" */
     color: var(--color-white);
-    border: none;
-    border-radius: var(--radius-pill);
-    padding: 64px 128px 80px;
-    transition: background var(--transition), transform 200ms ease;
+    padding: 1rem 2rem;
+    transition: background 200ms ease, transform 200ms ease, box-shadow 200ms ease;
 }
 
-.hero-cta:hover {
-    background: var(--color-action-hover);
+.btn.hero-cta:hover {
+    background: var(--color-primary-hover); /* #0f730c — darkened */
     color: var(--color-white);
-    transform: scale(1.05);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
 }
 
-/* Arrow indicator — always visible, slides right on hover */
-.hero-cta::after {
+.btn.hero-cta:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Arrow — slides right on hover; inline-flex parent centres it vertically */
+.btn.hero-cta::after {
     content: '→';
     display: inline-block;
     margin-left: 0.5em;
     transition: transform 200ms ease;
 }
 
-.hero-cta:hover::after {
+.btn.hero-cta:hover::after {
     transform: translateX(3px);
 }
 
