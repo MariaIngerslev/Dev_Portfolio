@@ -1367,10 +1367,29 @@ body {
     padding: 0 var(--space-xl);
 }
 
-/* Photo */
-.om-mig-photo-wrap {
+/* Hero: 2-column grid — intro text left, portrait photo right */
+.om-mig-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3.5rem;
+    align-items: center;
     margin-bottom: 4rem;
 }
+
+.om-mig-hero-text p {
+    font-family: var(--font-serif);
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text);
+    max-width: 70ch;
+}
+
+.om-mig-hero-text p + p {
+    margin-top: var(--space-md);
+}
+
+/* Photo */
+.om-mig-photo-wrap {}
 
 .om-mig-photo {
     display: block;
@@ -1400,8 +1419,8 @@ body {
 }
 
 .om-mig-list {
-    list-style: disc;
-    padding-left: 1.25rem;
+    list-style: none;
+    padding-left: 0;
     display: flex;
     flex-direction: column;
     gap: var(--space-xl);
@@ -1432,7 +1451,7 @@ body {
     display: block;
     font-weight: 400;
     color: var(--color-text-muted);
-    margin-top: 0.35rem;
+    margin-top: 6px;
 }
 
 .om-mig-section p {
@@ -1441,12 +1460,6 @@ body {
     line-height: 1.6;
     color: var(--color-text);
     max-width: 850px;
-}
-
-.om-mig-section:first-child > p {
-    font-size: 1rem;
-    line-height: 1.7;
-    max-width: 70ch;
 }
 
 .om-mig-section p + p {
@@ -1727,5 +1740,10 @@ body {
 
     .cv-container {
         padding: 0 var(--space-md);
+    }
+
+    .om-mig-hero {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
     }
 }
