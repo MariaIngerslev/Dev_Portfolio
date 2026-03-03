@@ -381,8 +381,9 @@ function createHeroSection() {
     textCol.append(heading, subheadline, ctaButton);
 
     // --- Image ---
-    const sketchImg = el('img');
-    sketchImg.src = '/images/blog/index.png';
+    const sketchImg = el('img', 'hero-sketch');
+    const isDarkOnRender = document.documentElement.getAttribute('data-theme') === 'dark';
+    sketchImg.src = isDarkOnRender ? '/images/blog/index2.png' : '/images/blog/index.png';
     sketchImg.alt = '';
     sketchImg.setAttribute('aria-hidden', 'true');
     const imageCol = el('div', 'hero-image');
@@ -1064,6 +1065,10 @@ function initDarkMode() {
             toggleBtn.textContent = '☾';
             toggleBtn.setAttribute('aria-label', 'Skift til mørkt tema');
             toggleBtn.setAttribute('aria-pressed', 'false');
+        }
+        const heroSketch = document.querySelector('.hero-sketch');
+        if (heroSketch) {
+            heroSketch.src = isDark ? '/images/blog/index2.png' : '/images/blog/index.png';
         }
     }
 
