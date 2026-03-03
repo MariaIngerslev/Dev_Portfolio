@@ -261,16 +261,16 @@ body {
 }
 
 .nav-link--contact {
-    background: var(--color-action);
-    color: var(--color-white);
+    background: var(--color-primary);
+    color: var(--color-text);
     border-radius: var(--radius-pill);
     padding: 8px 16px;
     transition: background var(--transition), color var(--transition);
 }
 
 .nav-link--contact:hover {
-    background: var(--color-action-hover);
-    color: var(--color-white);
+    background: var(--color-primary-hover);
+    color: var(--color-text);
 }
 
 /* ----- 5b. Mobile Hamburger ----- */
@@ -402,6 +402,10 @@ body {
     line-height: 1.05;
     color: var(--color-text);
     margin-bottom: var(--space-xl);
+}
+
+.hero-idea {
+    color: var(--color-primary);
 }
 
 .hero-subtitle {
