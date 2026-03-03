@@ -124,6 +124,10 @@ const el = (tag, className, textContent) => {
 function animateChars(text, startDelay, charStep) {
     const fragment = document.createDocumentFragment();
     [...text].forEach((char, i) => {
+        if (char === ' ') {
+            fragment.appendChild(document.createTextNode(' '));
+            return;
+        }
         const span = document.createElement('span');
         span.className = 'slice-char';
         span.textContent = char;
@@ -317,7 +321,9 @@ function createHeroSection() {
     subheadline.appendChild(animateChars('En blog med rod i solidt fullstack håndværk', 350, 25));
 
     const ctaButton = el('button', 'btn hero-cta');
-    ctaButton.appendChild(animateChars('Læs indlæg', 700, 50));
+    const ctaLabel = document.createElement('span');
+    ctaLabel.appendChild(animateChars('Læs indlæg', 700, 50));
+    ctaButton.appendChild(ctaLabel);
     ctaButton.addEventListener('click', () => {
         navigateTo('/blogposts');
     });

@@ -424,6 +424,7 @@ body {
 
 .slice-char {
     display: inline-block;
+    vertical-align: baseline;
     animation: slice-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
     /* animation-delay and animation-duration are set inline per character */
 }
