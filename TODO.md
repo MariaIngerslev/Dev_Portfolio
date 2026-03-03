@@ -1,1 +1,0 @@
-Edit "How I Tamed the AI" blog post: rename to "The Ralph Wiggum Loop" and remove "jeg kalder for" phrase

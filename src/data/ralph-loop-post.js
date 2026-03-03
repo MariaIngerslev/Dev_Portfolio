@@ -27,13 +27,23 @@ const RALPH_LOOP_POST = {
 
 <p>Et konkret eksempel: Jeg bad AI'en bygge en URL-validator til kommentarsporet på bloggen for at forhindre XSS-angreb og spam-links. Fordi jeg havde skrevet tests for Express-API'et på forhånd, kunne loopet automatisk fange, da AI'ens første forsøg fejlede i at afvise ulovlige domæner. AI'en fik ikke lov til at committe noget kode, før den havde skrevet en validator-funktion, der rent faktisk bestod mine sikkerhedstests.</p>
 
-<h2>4. Resultatet: Fra rå HTML til Medium-klon</h2>
+<h2>4. Terminalen: Loopet i praksis</h2>
+
+<img src="/images/blog/ralph_loop.png" alt="The Ralph Loop i terminalen" />
+
+<p>Sådan ser det faktisk ud, når loopet kører. Claude Code starter i terminalen, læser kontekst fra <code>CLAUDE.md</code> og <code>TODO.md</code>, udfører opgaven – og kører derefter testsuiten automatisk med <code>npm test</code>, inden det overhovedet overvejer at committe noget.</p>
+
+<p>Det vigtige her er rækkefølgen: <strong>tests kommer altid før commit</strong>. Hvis en test fejler, stopper loopet, og AI'en skal rette fejlen inden for den samme session. Den må ikke "gemme problemet til næste gang" – fordi der ikke er noget næste gang i den forstand. Hver session starter frisk.</p>
+
+<p>I screenshottet ovenfor kan du se loopet køre en session, der tilføjer URL-validering til kommentarsporet. Bemærk at Jest-outputtet er synligt direkte i terminalen, og at AI'en kun committer, efter alle tests er grønne. Git-historikken bliver dermed en troværdig log over verificerede ændringer – ikke et gæt.</p>
+
+<h2>5. Resultatet: Fra rå HTML til Medium-klon</h2>
 
 <p>Resultatet har været overvældende. Ved at fodre systemet med 5 meget præcise, tilstandsløse prompts i min <code>TODO.md</code>, kunne jeg lade The Ralph Loop køre i baggrunden.</p>
 
 <p>Den transformerede min forside fra et meget basalt, råt HTML-layout til et fuldt responsivt design inspireret af Medium.com. Og fordi hver ændring blev valideret og committet isoleret, kunne jeg nemt rulle tilbage, hvis et designvalg ikke fungerede – alt imens backend-logikken (som URL-validatoren) forblev fuldstændig intakt og sikker.</p>
 
-<h2>5. Konklusion: Fra Koder til Arkitekt</h2>
+<h2>6. Konklusion: Fra Koder til Arkitekt</h2>
 
 <p>Dette eksperiment har lært mig noget vigtigt om fremtiden for os udviklere. AI ændrer vores rolle fundamentalt. Vi bevæger os væk fra at være dem, der manuelt skriver hver eneste linje kode og flytter DOM-elementer rundt med JavaScript.</p>
 
