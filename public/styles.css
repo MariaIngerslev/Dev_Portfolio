@@ -1523,6 +1523,11 @@ body {
     gap: var(--space-xs);
 }
 
+.skill-chips-break {
+    flex-basis: 100%;
+    height: 0;
+}
+
 .skill-chip {
     display: inline-flex;
     align-items: center;
