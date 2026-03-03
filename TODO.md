@@ -1,4 +1,3 @@
-Increase footer padding between Location and Contact and add more padding to the right
 Add GitHub and LinkedIn links to the contact section
 Double the size of the "Læs indlæg" button on the home page
 Change the heading on the "Om mig" page from "Maria Ingerslev" to "Om mig"
