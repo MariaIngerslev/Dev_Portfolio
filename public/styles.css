@@ -20,6 +20,9 @@
     --color-primary-hover: #0f730c;
     --color-primary-light: #e8f5e8;
 
+    --color-forest-green:       #2D4F1E;  /* deep forest green — ghost nav button */
+    --color-forest-green-hover: rgba(45, 79, 30, 0.07); /* ghost button hover fill */
+
     --color-action:        #1a1a1a;      /* dark pill button fill */
     --color-action-hover:  #3d3d3d;
     --color-action-active: #111111;
@@ -261,16 +264,18 @@ body {
 }
 
 .nav-link--contact {
-    background: var(--color-primary);
-    color: var(--color-text);
+    background: transparent;
+    color: var(--color-forest-green);
     border-radius: var(--radius-pill);
-    padding: 8px 16px;
-    transition: background var(--transition), color var(--transition);
+    padding: 6.5px 14.5px;
+    border: 1.5px solid var(--color-forest-green);
+    transition: background var(--transition), border-color var(--transition);
 }
 
 .nav-link--contact:hover {
-    background: var(--color-primary-hover);
-    color: var(--color-text);
+    background: var(--color-forest-green-hover);
+    border-color: #1e3614;
+    color: var(--color-forest-green);
 }
 
 /* ----- 5b. Mobile Hamburger ----- */
@@ -417,7 +422,7 @@ body {
     margin-bottom: var(--space-xl);
 }
 
-/* Medium-style pill CTA */
+/* Medium-style pill CTA — primary blog-first action */
 .hero-cta {
     align-self: flex-start;
     font-family: var(--font-sans);
@@ -428,12 +433,25 @@ body {
     border: none;
     border-radius: var(--radius-pill);
     padding: 64px 128px 80px;
-    transition: opacity var(--transition);
+    transition: background var(--transition), transform 200ms ease;
 }
 
 .hero-cta:hover {
-    opacity: 0.8;
+    background: var(--color-action-hover);
     color: var(--color-white);
+    transform: scale(1.05);
+}
+
+/* Arrow indicator — always visible, slides right on hover */
+.hero-cta::after {
+    content: '→';
+    display: inline-block;
+    margin-left: 0.5em;
+    transition: transform 200ms ease;
+}
+
+.hero-cta:hover::after {
+    transform: translateX(3px);
 }
 
 .hero-image {
