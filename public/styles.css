@@ -603,19 +603,36 @@ body {
 }
 
 
+/* ----- 6c. Shared Subpage Heading ----- */
+/*
+ * Single source of truth for all subpage (Blog, Kontakt, Om mig) h1 typography.
+ * Update only this rule to apply font changes to all three pages simultaneously.
+ */
+.page-title,
+.blog-section-title,
+.page-heading {
+    font-family: var(--font-serif-display);
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--color-text);
+}
+
+/* Om mig: standalone heading needs bottom spacing before the profile photo */
+.page-title {
+    margin: 0 0 var(--space-xl);
+}
+
+/* Blog: the grid's own margin-top provides spacing; no extra bottom margin needed */
+.blog-section-title {
+    margin: 0;
+}
+
+
 /* ----- 7. Blog Cards - Responsive Grid ----- */
 .blog-section-header {
     max-width: var(--max-width-wide);
     margin: 0 auto;
     padding: var(--space-xl) var(--space-xl) 0;
-}
-
-.blog-section-title {
-    font-family: var(--font-serif-display);
-    font-size: var(--font-size-2xl);
-    font-weight: 700;
-    color: var(--color-text);
-    margin: 0;
 }
 
 .blog-grid {
@@ -1251,11 +1268,6 @@ body {
 }
 
 .page-heading {
-    font-family: var(--font-serif-display);
-    font-size: var(--font-size-2xl);
-    font-weight: 700;
-    letter-spacing: -0.03em;
-    color: var(--color-text);
     margin-bottom: var(--space-xl);
 }
 
@@ -1353,26 +1365,6 @@ body {
     max-width: var(--max-width-wide);
     margin: var(--space-2xl) auto 0;
     padding: 0 var(--space-xl);
-}
-
-/* Name hero */
-.om-mig-hero {
-    padding: 4rem 0 var(--space-xl);
-}
-
-.om-mig-rule {
-    border: none;
-    border-top: 1px solid var(--color-border-hover);
-    margin: var(--space-md) 0;
-}
-
-.om-mig-name {
-    font-family: var(--font-serif-display);
-    font-size: var(--font-size-2xl);
-    font-weight: 700;
-    color: var(--color-text);
-    text-align: center;
-    margin: var(--space-md) 0;
 }
 
 /* Photo */
@@ -1499,8 +1491,9 @@ body {
 }
 
 .skill-chip:hover {
-    border-color: var(--color-border-strong);
-    color: var(--color-text);
+    background: var(--color-action);
+    color: var(--color-white);
+    border-color: var(--color-action);
     transform: translateY(-1px);
 }
 
@@ -1518,14 +1511,13 @@ body {
     display: grid;
     grid-template-rows: 0fr;
     transition: grid-template-rows 300ms ease-in-out;
-    border-radius: 8px;
-    background: var(--color-surface);
-    border: 1.5px solid transparent;
+    border-radius: 12px;
+    background: rgba(231, 223, 209, 0.55);
+    border: 1.5px solid var(--color-border);
 }
 
 .skill-peek.is-open {
     grid-template-rows: 1fr;
-    border-color: var(--color-border);
 }
 
 .skill-peek-inner {
@@ -1627,7 +1619,7 @@ body {
 
     .skill-peek {
         display: block;
-        border: 1px solid rgba(0,0,0,0.06);
+        border: 1px solid var(--color-border);
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         min-height: 180px;
     }
