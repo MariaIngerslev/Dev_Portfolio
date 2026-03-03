@@ -120,6 +120,11 @@
     --color-cta-dark-hover: #3a7048;
 }
 
+/* ----- 1c. Dark Mode Component Overrides ----- */
+[data-theme="dark"] .btn-primary {
+    color: var(--color-bg);
+}
+
 
 /* ----- 2. Reset & Base ----- */
 *,
