@@ -930,6 +930,18 @@ function buildPeekContent(content) {
     fragment.appendChild(el('p', 'skill-peek-description', content.description));
 
     if (content.code) {
+        const wrap = document.createElement('div');
+        wrap.className = 'code-preview-wrap';
+
+        const chrome = document.createElement('div');
+        chrome.className = 'code-chrome';
+        ['code-dot--red', 'code-dot--yellow', 'code-dot--green'].forEach(cls => {
+            const dot = document.createElement('span');
+            dot.className = `code-dot ${cls}`;
+            chrome.appendChild(dot);
+        });
+        wrap.appendChild(chrome);
+
         const pre = document.createElement('pre');
         pre.className = 'skill-peek-code-block';
         const codeEl = document.createElement('code');
@@ -937,7 +949,9 @@ function buildPeekContent(content) {
             ? highlightJs(content.code)
             : escapeHtml(content.code);
         pre.appendChild(codeEl);
-        fragment.appendChild(pre);
+        wrap.appendChild(pre);
+
+        fragment.appendChild(wrap);
     }
 
     return fragment;
