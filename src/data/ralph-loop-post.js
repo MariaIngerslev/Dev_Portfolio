@@ -19,15 +19,15 @@ const RALPH_LOOP_POST = {
 
 <h2>3. Maskinrummet: Fra URL-validering til Git Commit</h2>
 
-<p>For at se loopet i praksis, kan vi kigge på terminalen. Flowet er altid det samme: <strong>Read Context → Execute Task → Run Tests → Git Commit → Exit</strong></p>
+<p>For at se loopet i praksis, kan vi kigge på terminalen. Flowet er altid det samme:</p>
 
 <pre><code>Read Context → Execute Task → Run Tests → Git Commit → Exit</code></pre>
-
-<img src="/images/blog/ralph_loop.png" alt="The Ralph Loop i terminalen" />
 
 <p>Et konkret eksempel opstod, da jeg bad AI'en bygge en URL-validator til kommentarsporet for at forhindre XSS-angreb. I et normalt chat-interface ville AI'en måske have argumenteret for sin kode i en uendelighed. Men i mit "Ralph Loop" kørte Claude Code i terminalen, læste kravene fra <code>CLAUDE.md</code> og gik i gang.</p>
 
 <p>Fordi jeg havde skrevet tests for Express-API'et på forhånd, fangede loopet automatisk, da AI'ens første forsøg fejlede i at afvise ulovlige domæner. AI'en fik ikke lov til at committe noget, før den havde rettet koden, så den rent faktisk bestod mine sikkerhedstests. Som du kan se i terminalen, er rækkefølgen benhård: <strong>tests kommer altid før commit.</strong> Hvis en test fejler, stopper loopet. Den må ikke "gemme problemet til næste gang" – fordi der ikke findes et "næste gang". Hver session starter med en frisk tavle.</p>
+
+<img src="/images/blog/ralph_loop.png" alt="The Ralph Loop i terminalen" />
 
 <h2>4. Resultatet: Fra rå HTML til Medium-klon</h2>
 
