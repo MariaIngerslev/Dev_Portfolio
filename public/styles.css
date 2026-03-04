@@ -1340,6 +1340,20 @@ body {
     text-decoration: underline;
 }
 
+@media (max-width: 600px) {
+    .site-footer {
+        flex-direction: column;
+        gap: var(--space-xl);
+    }
+    .footer-columns {
+        flex-direction: column;
+        gap: var(--space-lg);
+    }
+    .footer-col a {
+        word-break: break-all;
+    }
+}
+
 
 /* ----- 14a. Contact View ----- */
 #view-contact {
