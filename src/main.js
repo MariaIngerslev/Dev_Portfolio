@@ -13,7 +13,8 @@ const commentsRoutes = require('./routes/comments');
 const messagesRoutes = require('./routes/messages');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+const ALLOWED_ORIGIN = process.env.ALLOWED_ORIGIN || `http://localhost:${PORT}`;
 const PUBLIC_DIR = path.join(__dirname, '../public');
 
 async function seedPosts() {
@@ -46,7 +47,7 @@ app.use(helmet({
 app.use('/api', (req, res, next) => {
     if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(req.method)) {
         const origin = req.get('Origin') || req.get('Referer') || '';
-        if (origin && !origin.startsWith(`http://localhost:${PORT}`)) {
+        if (origin && !origin.startsWith(ALLOWED_ORIGIN)) {
             return res.status(403).json({ error: 'Forbidden: cross-origin mutation not allowed.' });
         }
     }
