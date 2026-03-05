@@ -372,10 +372,30 @@ function createHeroSection() {
     // --- Subtitle & CTA (initially hidden; revealed by startHeroAnimation) ---
     const subheadline = el('p', 'hero-subtitle', 'En blog med rod i solidt fullstack håndværk');
 
-    const ctaButton = el('button', 'btn hero-cta', 'Læs indlæg');
-    ctaButton.addEventListener('click', () => {
-        navigateTo('/blogindlæg');
-    });
+    // Semantic <a> - global click delegation in the router intercepts internal hrefs
+    const ctaButton = el('a', 'btn hero-cta');
+    ctaButton.href = '/blogindlæg';
+    ctaButton.textContent = 'Læs indlæg';
+
+    // Inline SVG arrow - built programmatically to avoid innerHTML and keep XSS safety
+    const ctaArrow = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    ctaArrow.setAttribute('class', 'hero-cta-arrow');
+    ctaArrow.setAttribute('viewBox', '0 0 24 24');
+    ctaArrow.setAttribute('width', '20');
+    ctaArrow.setAttribute('height', '20');
+    ctaArrow.setAttribute('aria-hidden', 'true');
+    ctaArrow.setAttribute('focusable', 'false');
+    ctaArrow.setAttribute('fill', 'none');
+
+    const ctaArrowPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    ctaArrowPath.setAttribute('d', 'M5 12h14M13 6l6 6-6 6');
+    ctaArrowPath.setAttribute('stroke', 'currentColor');
+    ctaArrowPath.setAttribute('stroke-width', '2');
+    ctaArrowPath.setAttribute('stroke-linecap', 'round');
+    ctaArrowPath.setAttribute('stroke-linejoin', 'round');
+
+    ctaArrow.appendChild(ctaArrowPath);
+    ctaButton.appendChild(ctaArrow);
 
     const textCol = el('div', 'hero-text');
     textCol.append(heading, subheadline, ctaButton);
