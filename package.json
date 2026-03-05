@@ -29,6 +29,10 @@
     "testEnvironment": "node",
     "testMatch": [
       "**/*.test.js"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/.worktrees/"
     ]
   },
   "devDependencies": {
