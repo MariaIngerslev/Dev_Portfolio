@@ -7,6 +7,7 @@ const rateLimit = require('express-rate-limit');
 const Post = require('./models/Post');
 const SEED_POST = require('./data/seed');
 const RALPH_LOOP_POST = require('./data/ralph-loop-post');
+const SECURITY_POST = require('./data/security-post');
 const apiRoutes = require('./routes/api');
 const postsRoutes = require('./routes/posts');
 const commentsRoutes = require('./routes/comments');
@@ -25,6 +26,7 @@ async function seedPosts() {
     await Post.deleteMany({ title: 'The Ralph Wiggum Loop' });
     await Post.findOneAndUpdate({ title: SEED_POST.title }, SEED_POST, { upsert: true, new: true });
     await Post.findOneAndUpdate({ title: RALPH_LOOP_POST.title }, RALPH_LOOP_POST, { upsert: true, new: true });
+    await Post.findOneAndUpdate({ title: SECURITY_POST.title }, SECURITY_POST, { upsert: true, new: true });
 }
 
 // Security headers

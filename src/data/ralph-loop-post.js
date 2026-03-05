@@ -11,9 +11,9 @@ const RALPH_LOOP_POST = {
 
 <h2>2. Konceptet: Hvad er et "Ralph Loop"?</h2>
 
-<p>Løsningen blev et koncept, jeg kalder et <em>Ralph Loop</em>. Navnet er en kærlig hilsen til Ralph Wiggum fra <em>The Simpsons</em> - karakteren, der er berømt for sin totale mangel på kontekst og ikoniske oneliners som "I'm a unit of measure!".</p>
+<p>Løsningen blev det koncept, der hedder <em>Ralph Wiggum Loop</em>. Navnet er en kærlig hilsen til Ralph Wiggum fra <em>The Simpsons</em> - karakteren, der er berømt for sin totale mangel på kontekst og ikoniske oneliners som "I'm a unit of measure!".</p>
 
-<p>I AI-verdenen (populariseret af bl.a. HumanLayer) refererer et "Ralph Loop" til en <strong>stateless agent</strong>. I stedet for at lade AI'en svømme rundt i en uendelig strøm af tidligere beskeder, tvinger vi den til at operere i korte, isolerede loops uden hukommelse om fortiden.</p>
+<p>I AI-verdenen refererer et "Ralph Loop" til en <strong>stateless agent</strong>. I stedet for at lade AI'en svømme rundt i en uendelig strøm af tidligere beskeder, tvinger vi den til at operere i korte, isolerede loops uden hukommelse om fortiden.</p>
 
 <p>Forestil dig en person, der lider af korttidshukommelsestab (ligesom i filmen <em>Memento</em>). Hver gang de skal løse en opgave, må de læse deres noter for at forstå, hvor de er, udføre opgaven, skrive resultatet ned, og derefter "glemme" alt igen. I min udvikling fungerer filsystemet (specifikt en <code>TODO.md</code> fil og Git) som AI'ens langtidshukommelse.</p>
 
@@ -23,9 +23,7 @@ const RALPH_LOOP_POST = {
 
 <pre><code>Read Context → Execute Task → Run Tests → Git Commit → Exit</code></pre>
 
-<p>Et konkret eksempel opstod, da jeg bad AI'en bygge en URL-validator til kommentarsporet for at forhindre XSS-angreb. I et normalt chat-interface ville AI'en måske have argumenteret for sin kode i en uendelighed. Men i mit "Ralph Loop" kørte Claude Code i terminalen, læste kravene fra <code>CLAUDE.md</code> og gik i gang.</p>
-
-<p>Fordi jeg havde skrevet tests for Express-API'et på forhånd, fangede loopet automatisk, da AI'ens første forsøg fejlede i at afvise ulovlige domæner. AI'en fik ikke lov til at committe noget, før den havde rettet koden, så den rent faktisk bestod mine sikkerhedstests. Som du kan se i terminalen, er rækkefølgen benhård: <strong>tests kommer altid før commit.</strong> Hvis en test fejler, stopper loopet. Den må ikke "gemme problemet til næste gang" – fordi der ikke findes et "næste gang". Hver session starter med en frisk tavle.</p>
+Derudover bliver der kørt nogle tests for at sikre, at ændringerne ikke har brudt noget. Hvis alle tests passerer, bliver ændringerne committet til Git. Hvis ikke, bliver de rullet tilbage, og AI'en får en chance for at prøve igen med en ny prompt – alt sammen uden at miste den overordnede kontekst eller introducere fejl i systemet.
 
 <img src="/images/blog/ralph_loop.png" alt="The Ralph Loop i terminalen" />
 
@@ -33,7 +31,7 @@ const RALPH_LOOP_POST = {
 
 <p>Resultatet har været overvældende. Ved at fodre systemet med meget præcise, tilstandsløse prompts i min <code>TODO.md</code>, kunne jeg lade loopet køre i baggrunden.</p>
 
-<p>Den transformerede min forside fra et basalt, råt HTML-layout til et fuldt responsivt design inspireret af Medium.com. Og fordi hver ændring blev valideret og committet isoleret, kunne jeg nemt rulle tilbage, hvis et designvalg ikke fungerede – alt imens backend-logikken (som URL-validatoren) forblev fuldstændig intakt og sikker.</p>
+<p>Og fordi hver ændring blev valideret og committet isoleret, kunne jeg nemt rulle tilbage, hvis et designvalg ikke fungerede - alt imens backend-logikken (som URL-validatoren) forblev fuldstændig intakt og sikker.</p>
 
 <h2>5. Konklusion: Fra Koder til Arkitekt</h2>
 
