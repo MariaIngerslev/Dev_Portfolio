@@ -3,10 +3,10 @@
 // Pre-compile route patterns once at load time instead of on every navigation
 const routes = [
     { path: '/', render: renderHome },
-    { path: '/blogposts', render: renderBlogposts },
+    { path: '/blogindlæg', render: renderBlogposts },
     { path: '/posts/:id', render: renderPost },
-    { path: '/contact', render: renderContact },
-    { path: '/cv', render: renderCv },
+    { path: '/kontakt', render: renderContact },
+    { path: '/om-mig', render: renderCv },
 ].map(({ path, render }) => {
     const paramNames = [];
     const pattern = path.replace(/:([^/]+)/g, (_, name) => {
@@ -374,7 +374,7 @@ function createHeroSection() {
 
     const ctaButton = el('button', 'btn hero-cta', 'Læs indlæg');
     ctaButton.addEventListener('click', () => {
-        navigateTo('/blogposts');
+        navigateTo('/blogindlæg');
     });
 
     const textCol = el('div', 'hero-text');
@@ -693,9 +693,9 @@ router.post('/', async (req, res) => {
         code: `// Pre-kompilér route-mønstre én gang ved opstart
 const routes = [
     { path: '/',          render: renderHome },
-    { path: '/blogposts', render: renderBlogposts },
+    { path: '/blogindlæg', render: renderBlogposts },
     { path: '/posts/:id', render: renderPost },
-    { path: '/cv',        render: renderCv },
+    { path: '/om-mig',    render: renderCv },
 ].map(({ path, render }) => {
     const paramNames = [];
     const pattern = path.replace(/:([^/]+)/g, (_, name) => {
