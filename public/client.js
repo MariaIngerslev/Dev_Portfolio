@@ -415,11 +415,17 @@ function renderPostContent(post) {
     const postBody = el('div');
     postBody.appendChild(sanitizeHtml(post.content));
 
-    fullPostContent.append(
-        el('h2', null, post.title),
-        el('time', 'post-date', formatDate(post.createdAt)),
-        postBody
-    );
+    const elements = [el('h2', null, post.title), el('time', 'post-date', formatDate(post.createdAt))];
+
+    if (post.heroImage) {
+        const heroImg = el('img', 'post-hero-image');
+        heroImg.src = post.heroImage;
+        heroImg.alt = post.title;
+        elements.splice(0, 0, heroImg);
+    }
+
+    elements.push(postBody);
+    fullPostContent.append(...elements);
 }
 
 function renderCommentCard(comment) {
