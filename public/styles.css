@@ -1500,7 +1500,7 @@ body {
     padding: 0 var(--space-xl);
 }
 
-/* Hero: 2-column grid — intro text left, portrait photo right */
+/* Hero: 2-column grid - intro text left, portrait photo right */
 .om-mig-hero {
     display: grid;
     grid-template-columns: 1fr 1fr;

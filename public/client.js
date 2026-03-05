@@ -141,7 +141,7 @@ function startHeroAnimation(typedChars, cursor, subtitle, ctaButton) {
 
     function typeNextChar() {
         if (i >= typedChars.length) {
-            // Typing complete — show cursor, reveal subtitle, then CTA.
+            // Typing complete - show cursor, reveal subtitle, then CTA.
             cursor.classList.add('is-visible');
             subtitle.classList.add('is-animating');
             setTimeout(() => ctaButton.classList.add('is-animating'), 300);
