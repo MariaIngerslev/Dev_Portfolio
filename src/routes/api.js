@@ -4,7 +4,7 @@ const { validateUrls } = require('../urlvalidator');
 const router = express.Router();
 
 // POST /api/validate-urls
-router.post('/validate-urls', (req, res) => {
+router.post('/validate-urls', async (req, res) => {
     const { urls } = req.body;
 
     if (!urls || !Array.isArray(urls) || urls.length === 0
@@ -14,7 +14,7 @@ router.post('/validate-urls', (req, res) => {
         });
     }
 
-    const results = validateUrls(urls);
+    const results = await validateUrls(urls);
     const allSafe = results.every((r) => r.safe);
 
     res.json({ allSafe, results });

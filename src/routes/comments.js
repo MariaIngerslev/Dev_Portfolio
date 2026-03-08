@@ -35,7 +35,7 @@ router.post('/', async (req, res) => {
 
     const foundUrls = extractUrls(text);
     if (foundUrls.length > 0) {
-        const validationResults = validateUrls(foundUrls);
+        const validationResults = await validateUrls(foundUrls);
         const unsafeUrls = validationResults.filter((entry) => !entry.safe);
         if (unsafeUrls.length > 0) {
             return res.status(400).json({

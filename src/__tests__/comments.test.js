@@ -4,8 +4,23 @@ const Post = require('../models/Post');
 
 let testPost;
 
+const mockSafeBrowsingResponse = (matchedUrls = []) => {
+    const matches = matchedUrls.map((url) => ({ threat: { url } }));
+    global.fetch = jest.fn().mockResolvedValue({
+        ok: true,
+        json: async () => (matches.length > 0 ? { matches } : {}),
+    });
+};
+
 beforeEach(async () => {
+    process.env.GOOGLE_SAFE_BROWSING_API_KEY = 'test-api-key';
+    mockSafeBrowsingResponse([]); // default: all URLs are safe
     testPost = await Post.create({ title: 'Test Post', content: 'Test content' });
+});
+
+afterEach(() => {
+    delete process.env.GOOGLE_SAFE_BROWSING_API_KEY;
+    jest.restoreAllMocks();
 });
 
 describe('GET /api/comments/:postId', () => {
@@ -84,7 +99,8 @@ describe('POST /api/comments', () => {
         expect(res.status).toBe(404);
     });
 
-    test('blacklisted URL in text returns 400 with unsafeUrls', async () => {
+    test('URL flagged by Safe Browsing in text returns 400 with unsafeUrls', async () => {
+        mockSafeBrowsingResponse(['https://malware.example.com']);
         const res = await request(app)
             .post('/api/comments')
             .send({ postId: testPost._id.toString(), text: 'Check https://malware.example.com out' });
