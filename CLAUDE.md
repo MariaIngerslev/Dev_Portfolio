@@ -7,6 +7,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **Start server:** `npm start` (runs `node src/main.js`, serves on http://localhost:3000)
 - **Install dependencies:** `npm install`
 - **Run tests:** `npm test` (Jest)
+- **Run migrations:** `npm run migrate` (applies pending one-time migrations, safe to re-run)
+- **Seed database:** `npm run db:seed` (upserts the three canonical posts by slug, idempotent)
 - **Security scan:** `python3 .claude/vibe-security-checker/scripts/scan_security.py . --full`
 
 ## Architecture
@@ -15,19 +17,19 @@ This is a Danish-language blog app with comment URL validation, built as an Expr
 
 **Backend — App factory** (`src/app.js`): Creates and configures the Express app. Applies security headers via `helmet` (CSP, referrer policy), cross-origin mutation protection (rejects non-allowlisted `Origin`/`Referer` on mutating API requests), rate limiting (`commentLimiter`: 10 req/min, `messageLimiter`: 5 req/min — disabled when `NODE_ENV=test`), static file serving, JSON body parsing, and mounts all route modules. Exports `app` for use by `main.js` and tests. No business logic or domain decisions here.
 
-**Backend — Entry point** (`src/main.js`): Connects to MongoDB, seeds initial posts, and calls `app.listen()`. Its sole responsibility is startup orchestration. All Express wiring lives in `src/app.js`.
+**Backend — Entry point** (`src/main.js`): Connects to MongoDB and calls `app.listen()`. Its sole responsibility is startup orchestration — no seeding or data management. All Express wiring lives in `src/app.js`.
 
 **Mongoose models** (`src/models/`):
-- `Post.js` — Schema: `title` (String, required), `content` (String, required), `heroImage` (String, optional), `createdAt` (Date, default now).
+- `Post.js` — Schema: `title` (String, required), `content` (String, required), `heroImage` (String, optional), `slug` (String, unique, sparse), `createdAt` (Date, default now). `slug` is the stable identity used for upserts — never change a post's slug once published.
 - `Comment.js` — Schema: `name` (String, default: 'Anonym'), `content` (String, required), `postId` (ObjectId, ref: 'Post', required, indexed), `createdAt` (Date, default now).
 - `Message.js` — Schema: `firstName` (String, required), `lastName` (String, required), `email` (String, required), `message` (String, required), `createdAt` (Date, default now).
 
 **Shared utilities and middleware** (`src/utils/`, `src/middleware/`, `src/data/`):
 - `utils/extractUrls.js` — Shared URL extraction via a strict, non-greedy regex that avoids capturing HTML attributes and terminal punctuation. Used by both server-side routes and the client. **The URL regex in `public/client.js` MUST be kept perfectly synchronised with `src/utils/extractUrls.js` at all times** — any divergence will cause validation mismatches between the frontend and backend.
 - `middleware/validateObjectId.js` — Reusable Express middleware for MongoDB ObjectId param validation.
-- `data/seed.js` — Initial blog post seed content, separated from entry point.
-- `data/ralph-loop-post.js` — Second blog post seed ("The Ralph Loop").
-- `data/security-post.js` — Third blog post seed (security hardening). All three seed files are loaded in `main.js` via `findOneAndUpdate` with `upsert: true`.
+- `data/seed.js` — First blog post data object (slug: `fra-ide-til-kode`).
+- `data/ralph-loop-post.js` — Second blog post data object (slug: `the-stateless-developer`).
+- `data/security-post.js` — Third blog post data object (slug: `defense-in-depth`). All three are consumed by `scripts/seed.js` — they are no longer loaded in `main.js`.
 
 **Route modules** (`src/routes/`):
 - `api.js` — `POST /api/validate-urls`: delegates to the validator module, returns `{ allSafe, results }` where each result has `{ url, safe, reason }`.
@@ -52,6 +54,14 @@ This is a Danish-language blog app with comment URL validation, built as an Expr
 - **Fetch error handling:** Always check `!response.ok` explicitly after every `fetch` call before attempting to parse the JSON body. Never assume a response is successful based solely on the absence of a network error.
 
 **`src/urlvalidator.js`**: Deterministic URL validator with a Set-based domain blacklist and keyword-based detection. Blacklist terms are matched against the entire URL string (not just hostname), catching threats in paths like `example.com/virus.exe`. URLs containing "unsafe" or "risky" keywords are flagged as malicious. Internal `classifyUrl` helper per URL; exports `validateUrls(urls)` returning `[{ url, safe, reason }]` where reason is `'blacklisted'`, `'malicious'`, `'safe'`, or `'malformed'`. All matching is case-insensitive.
+
+## Database Management
+
+**Migrations** (`migrations/`, runner: `scripts/migrate.js`): One-time, destructive or structural changes that must run exactly once per environment. Each file exports `up(db)` receiving the native MongoDB `db` object (`mongoose.connection.db`). The runner tracks applied migrations by filename in a `migrations` collection and skips already-applied ones — safe to run on every deploy. Add new migrations as `NNN-description.js` (e.g. `002-add-index.js`). There is no `down()` / rollback support.
+
+**Seed script** (`scripts/seed.js`): Upserts the three canonical blog posts by `slug` using `findOneAndUpdate({ slug }, { $set: post }, { upsert: true })`. Idempotent — safe to run multiple times. When adding a new canonical post: add a data object in `src/data/`, give it a permanent `slug`, add it to the `POSTS` array in `scripts/seed.js`.
+
+**Test isolation note:** The `migrations` and `migration_fixture_log` collections are created via the native MongoDB driver (not Mongoose models) and are therefore not wiped by the shared `afterEach` in `src/__tests__/setup.js`. Tests for `scripts/migrate.js` must include a `beforeEach` that explicitly drops these collections.
 
 ## Express 5 Best Practices
 
