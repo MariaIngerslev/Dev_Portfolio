@@ -1,5 +1,6 @@
 const RALPH_LOOP_POST = {
     title:     "The Stateless Developer: Genvej til fejlfri AI-kode",
+    slug:      'the-stateless-developer',
     heroImage: '/images/blog/ralph_loop.jpg',
     content: `<h2>1. Krogen: Når AI'en mister den røde tråd</h2>
 

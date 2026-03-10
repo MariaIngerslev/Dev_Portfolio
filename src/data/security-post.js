@@ -1,5 +1,6 @@
 const SECURITY_POST = {
     title: 'Defense in Depth: Sådan hærdede jeg platformen lag for lag',
+    slug:      'defense-in-depth',
     heroImage: '/images/blog/security.jpg',
     content: `<h2>1. Sikkerhed er ikke en eftertanke</h2>
 
