@@ -91,5 +91,5 @@ This is a Danish-language blog app with comment URL validation, built as an Expr
 ## Key Context
 
 - Uses CommonJS modules (`"type": "commonjs"` in package.json)
-- MongoDB via Mongoose for data persistence; connection string from `MONGODB_URI` env var (falls back to `MONGO_URI`)
+- MongoDB via Mongoose for data persistence; connection string from `MONGO_URI` env var
 - `.env` file holds the connection string (git-ignored)

@@ -5,10 +5,10 @@ const app = require('./app');
 const PORT = process.env.PORT || 3000;
 
 async function start() {
-    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    const mongoUri = process.env.MONGO_URI;
 
     if (!mongoUri) {
-        console.error('MONGODB_URI environment variable is not set');
+        console.error('MONGO_URI environment variable is not set');
         process.exit(1);
     }
 

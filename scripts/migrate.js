@@ -36,9 +36,9 @@ if (require.main === module) {
     require('dotenv').config();
     const mongoose = require('mongoose');
 
-    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI;
+    const mongoUri = process.env.MONGO_URI;
     if (!mongoUri) {
-        console.error('MONGODB_URI is not set');
+        console.error('MONGO_URI environment variable is not set');
         process.exit(1);
     }
 
