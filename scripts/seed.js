@@ -17,7 +17,7 @@ async function seedPosts(PostModel) {
         await PostModel.findOneAndUpdate(
             { slug: post.slug },
             { $set: post },
-            { upsert: true, new: true }
+            { upsert: true }
         );
     }
 }

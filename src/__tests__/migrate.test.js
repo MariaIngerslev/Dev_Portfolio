@@ -5,6 +5,12 @@ const { runMigrations } = require('../../scripts/migrate');
 const FIXTURES_DIR = path.join(__dirname, 'fixtures/migrations');
 
 describe('runMigrations', () => {
+    beforeEach(async () => {
+        const db = mongoose.connection.db;
+        await db.collection('migrations').drop().catch(() => {});
+        await db.collection('migration_fixture_log').drop().catch(() => {});
+    });
+
     it('runs a new migration and records it in the migrations collection', async () => {
         const db = mongoose.connection.db;
         await runMigrations(db, FIXTURES_DIR);
