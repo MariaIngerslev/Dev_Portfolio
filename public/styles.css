@@ -1596,6 +1596,14 @@ body {
     font-weight: 400;
 }
 
+.erfaring-subtitle {
+    display: block;
+    font-weight: 400;
+    color: var(--color-text-muted);
+    margin-top: 2px;
+    font-size: var(--font-size-sm, 0.875rem);
+}
+
 .erfaring-desc {
     display: block;
     font-weight: 400;
